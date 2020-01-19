@@ -22,12 +22,14 @@
 	var dealersHand = 0;
 	var playersHand = 0;
 
-	var roundReset = false;
+	var dealerFirstPlay = true;
+
+	var playerHolds = false;
 
 
 	//player's darw function
 	function drawCard(){
-		if(!dealersTurn && playersTurn){
+		if(!dealersTurn && playersTurn && !playerHolds){
 			suit = getSuit();
 
 			value = getValue();
@@ -62,32 +64,44 @@
 
 	function dealCard(){
 		if(dealersTurn && !playersTurn){
-			suit = getSuit();
 
-			value = getValue();
+			if(dealersHand < 17){
 
-			if(!isJack && !isACE && !isQueen && !isKing){
-				document.getElementById("dealerDelt").innerHTML = "Dealer Played " + value + " of " + suit;
-				document.getElementById("dealerScore").innerHTML = dealersHand;
-			}
-			if(isACE){
-				printVarDealer = "Dealer Played the Ace of " + suit;
-				document.getElementById("dealerDelt").innerHTML = "Dealer Played the Ace of " + suit;
-				document.getElementById("dealerScore").innerHTML = dealersHand;
-			}
-			if(isKing){
-				document.getElementById("dealerDelt").innerHTML = "Dealer Played the King of " + suit;
-				document.getElementById("dealerScore").innerHTML = dealersHand;
+				suit = getSuit();
 
-			}
-			if(isJack){
-				document.getElementById("dealerDelt").innerHTML = "Dealer Played the Jack of " + suit;
-				document.getElementById("dealerScore").innerHTML = dealersHand;
+				value = getValue();
 
-			}
-			if(isQueen){
-				document.getElementById("dealerDelt").innerHTML = "Dealer Played the Queen of " + suit;
-				document.getElementById("dealerScore").innerHTML = dealersHand;
+				if(!isJack && !isACE && !isQueen && !isKing){
+					document.getElementById("dealerDelt").innerHTML = "Dealer Played " + value + " of " + suit;
+					document.getElementById("dealerScore").innerHTML = dealersHand;
+				}
+				if(isACE){
+					printVarDealer = "Dealer Played the Ace of " + suit;
+					document.getElementById("dealerDelt").innerHTML = "Dealer Played the Ace of " + suit;
+					document.getElementById("dealerScore").innerHTML = dealersHand;
+				}
+				if(isKing){
+					document.getElementById("dealerDelt").innerHTML = "Dealer Played the King of " + suit;
+					document.getElementById("dealerScore").innerHTML = dealersHand;
+
+				}
+				if(isJack){
+					document.getElementById("dealerDelt").innerHTML = "Dealer Played the Jack of " + suit;
+					document.getElementById("dealerScore").innerHTML = dealersHand;
+
+				}
+				if(isQueen){
+					document.getElementById("dealerDelt").innerHTML = "Dealer Played the Queen of " + suit;
+					document.getElementById("dealerScore").innerHTML = dealersHand;
+
+				}
+
+				if(dealerFirstPlay){
+					dealersTurn = false;
+					playersTurn = true;
+					dealerFirstPlay = false;
+
+				}
 
 			}
 
@@ -136,10 +150,6 @@
 			valueFinal = 1;
 			isACE = true;
 			if(dealersTurn && !playersTurn){
-				if(dealersHand < 9){
-					dealersHand += 10;
-
-				}
 				if(dealersHand == 10){
 					dealersHand += 11;
 
@@ -148,19 +158,22 @@
 					dealersHand += 1;
 
 				}
+				if(dealersHand <= 9){
+					dealersHand += 10;
+				}
 
 			}
 			if(!dealersTurn && playersTurn){
-				if(playersHand < 9){
-					playersHand += 10;
-
-				}
 				if(playersHand == 10){
 					playersHand += 11;
 
 				}
 				if(playersHand > 10){
 					playersHand += 1;
+
+				}
+				if(playersHand <= 9){
+					playersHand += 10;
 
 				}
 			}
@@ -314,6 +327,7 @@
 			//king
 		}
 
+
 		return valueFinal;
 	}
 
@@ -328,15 +342,40 @@
 		isACE = false;
 
 		dealersTurn = true;
+		playersTurn = false;
 
 		dealersHand = 0;
 		playersHand = 0;
 
-		roundReset = false;
+		dealerFirstPlay = true;
+		playerHolds = false;
+
+		document.getElementById("playerScore").innerHTML = playersHand;
+		document.getElementById("dealerScore").innerHTML = dealersHand;
+		document.getElementById("playerDrew").innerHTML = "";
+		document.getElementById("dealerDelt").innerHTML = "";
+		document.getElementById("endGame").innerHTML = "";
 
 	}
 
 	function finishGame(){
+		if(dealersHand >= 17 && dealersHand < playersHand){
+				document.getElementById("endGame").innerHTML = "Dealer cannot play anymore. YOU WIN!!!";
+				dealersTurn = false;
+				playersTurn = false;
+		}
+		if(dealersHand == playersHand && dealersHand > 17){
+			document.getElementById("endGame").innerHTML = "TIE GAME! Try again...";
+			dealersTurn = false;
+			playersTurn = false;
+
+		}
+		if(dealersHand > playersHand && playerHolds){
+			document.getElementById("endGame").innerHTML = "Dealer beats your score. DEALER WINS!!!";
+			dealersTurn = false;
+			playersTurn = false;
+
+		}
 		if(playersHand > 21){
 			playersTurn = false;
 			dealersTurn = false;
@@ -350,21 +389,32 @@
 
 	}
 
+	function playerHold(){
+		document.getElementById("playerDrew").innerHTML = "Player is holding at " + playersHand;
+		playersTurn = false;
+		dealersTurn = true;
+		playerHolds = true;
+		
+	}
+
 </script>
 <center>
-<h2>Black Jack</h2>>
-<h2>Dealer Clicks to Deal</h2>>
+<h2>Black Jack</h2>
+<h2>Dealer Clicks to Deal</h2>
 <input type=button value="DEAL" onClick="dealCard(); finishGame();">
 <p>Face Up Card Dealt</p>
 <p id="dealerDelt"></p>
 <p id="dealerScore"></p>
 <br>
-<h2>Click to draw card</h2>>
+<h2>Click to draw card</h2>
 <input type=button value="HIT" onClick="drawCard(); finishGame();" >
+<br>
+<input type=button value="HOLD" onClick="playerHold(); finishGame();">
 <p>Card Drawn</p>
 <p id="playerDrew"></p>
 <p id="playerScore"></p>
 <p id = "endGame"></p>
+<input type =button value="Reset Round" onClick="newRound();">
 
 </center>
 
