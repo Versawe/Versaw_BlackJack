@@ -150,30 +150,23 @@
 			valueFinal = 1;
 			isACE = true;
 			if(dealersTurn && !playersTurn){
-				if(dealersHand == 10){
-					dealersHand += 11;
-
-				}
 				if(dealersHand > 10){
 					dealersHand += 1;
 
 				}
-				if(dealersHand <= 9){
-					dealersHand += 10;
+				if(dealersHand <= 10){
+					dealersHand += 11;
+
 				}
 
 			}
 			if(!dealersTurn && playersTurn){
-				if(playersHand == 10){
-					playersHand += 11;
-
-				}
 				if(playersHand > 10){
 					playersHand += 1;
 
 				}
-				if(playersHand <= 9){
-					playersHand += 10;
+				if(playersHand <= 10){
+					playersHand += 11;
 
 				}
 			}
@@ -390,10 +383,13 @@
 	}
 
 	function playerHold(){
-		document.getElementById("playerDrew").innerHTML = "Player is holding at " + playersHand;
-		playersTurn = false;
-		dealersTurn = true;
-		playerHolds = true;
+		if(playersTurn){
+			document.getElementById("playerDrew").innerHTML = "Player is holding at " + playersHand;
+			playersTurn = false;
+			dealersTurn = true;
+			playerHolds = true;
+
+		}
 		
 	}
 
