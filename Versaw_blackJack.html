@@ -26,76 +26,13 @@
 
 	var playerHolds = false;
 
-	//variables for non-repeating cards in a 52 card deck
-	var kingHearts = false;
-	var kingDiamonds = false;
-	var kingClubs = false;
-	var kingSpades = false;
 
-	var queenHearts = false;
-	var queenDiamonds = false;
-	var queenClubs = false;
-	var queenSpades = false;
-
-	var jackHearts = false;
-	var jackDiamonds = false;
-	var jackClubs = false;
-	var jackSpades = false;
-
-	var aceHearts = false;
-	var aceDiamonds = false;
-	var aceClubs = false;
-	var aceSpades = false;
-
-	var hearts2 = false;
-	var hearts3 = false;
-	var hearts4 = false;
-	var hearts5 = false;
-	var hearts6 = false;
-	var hearts7 = false;
-	var hearts8 = false;
-	var hearts9 = false;
-	var hearts10 = false;
-
-	var diamonds2 = false;
-	var diamonds3 = false;
-	var diamonds4 = false;
-	var diamonds5 = false;
-	var diamonds6 = false;
-	var diamonds7 = false;
-	var diamonds8 = false;
-	var diamonds9 = false;
-	var diamonds10 = false;
-
-	var spades2 = false;
-	var spades3 = false;
-	var spades4 = false;
-	var spades5 = false;
-	var spades6 = false;
-	var spades7 = false;
-	var spades8 = false;
-	var spades9 = false;
-	var spades10 = false;
-
-	var clubs2 = false;
-	var clubs3 = false;
-	var clubs4 = false;
-	var clubs5 = false;
-	var clubs6 = false;
-	var clubs7 = false;
-	var clubs8 = false;
-	var clubs9 = false;
-	var clubs10 = false;
-
-
-	//player's draw function
+	//player's darw function
 	function drawCard(){
 		if(!dealersTurn && playersTurn && !playerHolds){
 			suit = getSuit();
 
 			value = getValue();
-
-			removeFromDeck();
 
 			if(!isJack && !isACE && !isQueen && !isKing){
 				document.getElementById("playerDrew").innerHTML = "You drew the " + value + " of " + suit;
@@ -210,118 +147,186 @@
 		valueChoice = Math.floor(Math.random() * 13) + 1;
 
 		if(valueChoice == 1){
-			
 			valueFinal = 1;
-			checkRemovedCards();
+			isACE = true;
+			if(dealersTurn && !playersTurn){
+				if(dealersHand == 10){
+					dealersHand += 11;
+
+				}
+				if(dealersHand > 10){
+					dealersHand += 1;
+
+				}
+				if(dealersHand <= 9){
+					dealersHand += 10;
+				}
+
+			}
+			if(!dealersTurn && playersTurn){
+				if(playersHand == 10){
+					playersHand += 11;
+
+				}
+				if(playersHand > 10){
+					playersHand += 1;
+
+				}
+				if(playersHand <= 9){
+					playersHand += 10;
+
+				}
+			}
+			//ace
 		}
 		if(valueChoice == 2){
 			valueFinal = 2;
-			checkRemovedCards();
+			if(dealersTurn && !playersTurn){
+				dealersHand += 2;
+
+			}
+			if(!dealersTurn && playersTurn){
+				playersHand += 2;
+
+			}
+
 		}
 		if(valueChoice == 3){
 			valueFinal = 3;
-			checkRemovedCards();
+			if(dealersTurn && !playersTurn){
+				dealersHand += 3;
+
+			}
+			if(!dealersTurn && playersTurn){
+				playersHand += 3;
+
+			}
 
 		}
 		if(valueChoice == 4){
 			valueFinal = 4;
-			checkRemovedCards();
-			
-			
+			if(dealersTurn && !playersTurn){
+				dealersHand += 4;
+
+			}
+			if(!dealersTurn && playersTurn){
+				playersHand += 4;
+
+			}
 
 		}
 		if(valueChoice == 5){
 			valueFinal = 5;
-			checkRemovedCards();
-			
-			
+			if(dealersTurn && !playersTurn){
+				dealersHand += 5;
+
+			}
+			if(!dealersTurn && playersTurn){
+				playersHand += 5;
+
+			}
 
 		}
 		if(valueChoice == 6){
 			valueFinal = 6;
-			checkRemovedCards();
-			
-			
+			if(dealersTurn && !playersTurn){
+				dealersHand += 6;
+
+			}
+			if(!dealersTurn && playersTurn){
+				playersHand += 6;
+
+			}
 
 		}
 		if(valueChoice == 7){
 			valueFinal = 7;
-			checkRemovedCards();
-			
 			if(dealersTurn && !playersTurn){
 				dealersHand += 7;
+
 			}
 			if(!dealersTurn && playersTurn){
 				playersHand += 7;
+
 			}
 
 		}
 		if(valueChoice == 8){
 			valueFinal = 8;
-			checkRemovedCards();
-			
 			if(dealersTurn && !playersTurn){
 				dealersHand += 8;
+
 			}
 			if(!dealersTurn && playersTurn){
 				playersHand += 8;
+
 			}
 
 		}
 		if(valueChoice == 9){
 			valueFinal = 9;
-			checkRemovedCards();
-			
 			if(dealersTurn && !playersTurn){
 				dealersHand += 9;
+
 			}
 			if(!dealersTurn && playersTurn){
 				playersHand += 9;
+
 			}
 
 		}
 		if(valueChoice == 10){
 			valueFinal = 10;
-			checkRemovedCards();
-			
 			if(dealersTurn && !playersTurn){
 				dealersHand += 10;
+
 			}
 			if(!dealersTurn && playersTurn){
 				playersHand += 10;
+
 			}
 
 		}
 		if(valueChoice == 11){
 			valueFinal = 10;
-			checkRemovedCards();
 			isJack = true;
-			
 			if(dealersTurn && !playersTurn){
 				dealersHand += 10;
+
 			}
 			if(!dealersTurn && playersTurn){
 				playersHand += 10;
+
 			}
 			//jack
 		}
 		if(valueChoice == 12){
 			valueFinal = 10;
-			checkRemovedCards();
 			isQueen = true;
-			
 			if(dealersTurn && !playersTurn){
 				dealersHand += 10;
+
 			}
 			if(!dealersTurn && playersTurn){
 				playersHand += 10;
+
 			}
 			//queen
 		}
 		if(valueChoice == 13){
 			valueFinal = 10;
-			checkRemovedCards();
+			isKing = true;
+			if(dealersTurn && !playersTurn){
+				dealersHand += 10;
+
+			}
+			if(!dealersTurn && playersTurn){
+				playersHand += 10;
+
+			}
+			//king
 		}
+
 
 		return valueFinal;
 	}
@@ -390,573 +395,6 @@
 		dealersTurn = true;
 		playerHolds = true;
 		
-	}
-
-	function checkRemovedCards(){
-		if(suit == "Hearts"){
-			if(value == 1 && !aceHearts){
-				isACE = true;
-			
-			if(dealersTurn && !playersTurn){
-				if(dealersHand > 10){
-					dealersHand += 1;
-				}
-				if(dealersHand <= 10){
-					dealersHand += 11;
-				}
-
-			}
-			if(!dealersTurn && playersTurn){
-				if(playersHand > 10){
-					playersHand += 1;
-				}
-				if(playersHand <= 10){
-					playersHand += 11;
-				}
-			}else{
-				getValue();
-
-			}
-			//ace
-				
-			}
-			if(value == 2 && hearts2){
-				if(dealersTurn && !playersTurn){
-				dealersHand += 2;
-				}
-				if(!dealersTurn && playersTurn){
-					playersHand += 2;
-				}
-				
-			}else{
-				getValue();
-			}
-			if(value == 3 && hearts3){
-				if(dealersTurn && !playersTurn){
-				dealersHand += 3;
-				}
-				if(!dealersTurn && playersTurn){
-					playersHand += 3;
-				}
-				
-			}else{
-				getValue();
-			}
-			if(value == 4 && hearts4){
-				if(dealersTurn && !playersTurn){
-				dealersHand += 4;
-			}
-			if(!dealersTurn && playersTurn){
-				playersHand += 4;
-			}
-				
-			}else{
-				getValue();
-			}
-			if(value == 5 && hearts5){
-				if(dealersTurn && !playersTurn){
-				dealersHand += 5;
-			}
-			if(!dealersTurn && playersTurn){
-				playersHand += 5;
-			}
-				
-			}else{
-				getValue();
-			}
-			if(value == 6 && hearts6){
-				if(dealersTurn && !playersTurn){
-				dealersHand += 6;
-			}
-			if(!dealersTurn && playersTurn){
-				playersHand += 6;
-			}
-				
-			}else{
-				getValue();
-			}
-			if(value == 7 && hearts7){
-				if(dealersTurn && !playersTurn){
-				dealersHand += 7;
-			}
-			if(!dealersTurn && playersTurn){
-				playersHand += 7;
-			}
-				
-			}else{
-				getValue();
-			}
-			if(value == 8 && hearts8){
-				if(dealersTurn && !playersTurn){
-				dealersHand += 8;
-			}
-			if(!dealersTurn && playersTurn){
-				playersHand += 8;
-			}
-				
-			}else{
-				getValue();
-			}
-			if(value == 9 && hearts9){
-				if(dealersTurn && !playersTurn){
-				dealersHand += 9;
-			}
-			if(!dealersTurn && playersTurn){
-				playersHand += 9;
-			}
-				
-			}else{
-				getValue();
-			}
-			if(value == 10 && hearts10){
-				if(dealersTurn && !playersTurn){
-				dealersHand += 10;
-			}
-			if(!dealersTurn && playersTurn){
-				playersHand += 10;
-			}
-				
-			}else{
-				getValue();
-			}
-			if(value == 11 && jackHearts){
-				if(dealersTurn && !playersTurn){
-				dealersHand += 10;
-			}
-			if(!dealersTurn && playersTurn){
-				playersHand += 10;
-			}
-				
-			}else{
-				getValue();
-			}
-			if(value == 12 && queenHearts){
-				value = Math.floor(Math.random() * 13) + 1;
-				
-			}
-			if(value == 13 && kingHearts){
-				isKing = true;
-			
-				if(dealersTurn && !playersTurn){
-					dealersHand += 10;
-				}
-				if(!dealersTurn && playersTurn){
-					playersHand += 10;
-				}
-				//king
-				
-			}else{
-				value = Math.floor(Math.random() * 13) + 1;
-			}
-
-		}
-
-		if(suit == "Diamonds"){
-			if(value == 1 && aceDiamonds){
-				value = Math.floor(Math.random() * 13) + 1;
-				
-			}
-			if(value == 2 && diamonds2){
-				value = Math.floor(Math.random() * 13) + 1;
-				
-			}
-			if(value == 3 && diamonds3){
-				value = Math.floor(Math.random() * 13) + 1;
-				
-			}
-			if(value == 4 && diamonds4){
-				value = Math.floor(Math.random() * 13) + 1;
-				
-			}
-			if(value == 5 && diamonds5){
-				value = Math.floor(Math.random() * 13) + 1;
-				
-			}
-			if(value == 6 && diamonds6){
-				value = Math.floor(Math.random() * 13) + 1;
-				
-			}
-			if(value == 7 && diamonds7){
-				value = Math.floor(Math.random() * 13) + 1;
-				
-			}
-			if(value == 8 && diamonds8){
-				value = Math.floor(Math.random() * 13) + 1;
-				
-			}
-			if(value == 9 && diamonds9){
-				value = Math.floor(Math.random() * 13) + 1;
-				
-			}
-			if(value == 10 && diamonds10){
-				value = Math.floor(Math.random() * 13) + 1;
-				
-			}
-			if(value == 11 && jackDiamonds){
-				value = Math.floor(Math.random() * 13) + 1;
-				
-			}
-			if(value == 12 && queenDiamonds){
-				value = Math.floor(Math.random() * 13) + 1;
-				
-			}
-			if(value == 13 && kingDiamonds){
-				value = Math.floor(Math.random() * 13) + 1;
-				
-			}
-
-		}
-
-		if(suit == "Clubs"){
-			if(value == 1 && aceClubs){
-				value = Math.floor(Math.random() * 13) + 1;
-				
-			}
-			if(value == 2 && clubs2){
-				value = Math.floor(Math.random() * 13) + 1;
-				
-			}
-			if(value == 3 && clubs3){
-				value = Math.floor(Math.random() * 13) + 1;
-				
-			}
-			if(value == 4 && clubs4){
-				value = Math.floor(Math.random() * 13) + 1;
-				
-			}
-			if(value == 5 && clubs5){
-				value = Math.floor(Math.random() * 13) + 1;
-				
-			}
-			if(value == 6 && clubs6){
-				value = Math.floor(Math.random() * 13) + 1;
-				
-			}
-			if(value == 7 && clubs7){
-				value = Math.floor(Math.random() * 13) + 1;
-				
-			}
-			if(value == 8 && clubs8){
-				value = Math.floor(Math.random() * 13) + 1;
-				
-			}
-			if(value == 9 && clubs9){
-				value = Math.floor(Math.random() * 13) + 1;
-				
-			}
-			if(value == 10 && clubs10){
-				value = Math.floor(Math.random() * 13) + 1;
-				
-			}
-			if(value == 11 && jackClubs){
-				value = Math.floor(Math.random() * 13) + 1;
-				
-			}
-			if(value == 12 && queenClubs){
-				value = Math.floor(Math.random() * 13) + 1;
-				
-			}
-			if(value == 13 && kingClubs){
-				value = Math.floor(Math.random() * 13) + 1;
-				
-			}
-
-		}
-
-		if(suit == "Spades"){
-			if(value == 1 && aceSpades){
-				value = Math.floor(Math.random() * 13) + 1;
-				
-			}
-			if(value == 2 && spades2){
-				value = Math.floor(Math.random() * 13) + 1;
-				
-			}
-			if(value == 3 && spades3){
-				value = Math.floor(Math.random() * 13) + 1;
-				
-			}
-			if(value == 4 && spades4){
-				value = Math.floor(Math.random() * 13) + 1;
-				
-			}
-			if(value == 5 && spades5){
-				value = Math.floor(Math.random() * 13) + 1;
-				
-			}
-			if(value == 6 && spades6){
-				value = Math.floor(Math.random() * 13) + 1;
-				
-			}
-			if(value == 7 && spades7){
-				value = Math.floor(Math.random() * 13) + 1;
-				
-			}
-			if(value == 8 && spades8){
-				value = Math.floor(Math.random() * 13) + 1;
-				
-			}
-			if(value == 9 && spades9){
-				value = Math.floor(Math.random() * 13) + 1;
-				
-			}
-			if(value == 10 && spades10){
-				value = Math.floor(Math.random() * 13) + 1;
-				
-			}
-			if(value == 11 && jackSpades){
-				value = Math.floor(Math.random() * 13) + 1;
-				
-			}
-			if(value == 12 && queenSpades){
-				value = Math.floor(Math.random() * 13) + 1;
-				
-			}
-			if(value == 13 && kingSpades){
-				value = Math.floor(Math.random() * 13) + 1;
-				
-			}
-
-		}
-
-	}
-
-	function removeFromDeck(){
-		if(suit == 'Diamonds'){
-			if(value == 1){
-				aceDiamonds = true;
-			}
-			if(value == 2){
-				diamonds2 = true;
-			}
-			if(value == 3){
-				diamonds3 = true;
-			}
-			if(value == 4){
-				diamonds4 = true;
-			}
-			if(value == 5){
-				diamonds5 = true;
-			}
-			if(value == 6){
-				diamonds6 = true;
-			}
-			if(value == 7){
-				diamonds7 = true;
-			}
-			if(value == 8){
-				diamonds8 = true;
-			}
-			if(value == 9){
-				diamonds9 = true;
-			}
-			if(value == 10){
-				diamonds10 = true;
-			}
-			if(value == 11){
-				jackDiamonds = true;
-			}
-			if(value == 12){
-				queenDiamonds = true;
-			}
-			if(value == 13){
-				kingDiamonds = true;
-			}
-
-		}
-
-		if(suit == 'Hearts'){
-			if(value == 1){
-				aceHearts = true;
-			}
-			if(value == 2){
-				hearts2 = true;
-			}
-			if(value == 3){
-				hearts3 = true;
-			}
-			if(value == 4){
-				hearts4 = true;
-			}
-			if(value == 5){
-				hearts5 = true;
-			}
-			if(value == 6){
-				hearts6 = true;
-			}
-			if(value == 7){
-				hearts7 = true;
-			}
-			if(value == 8){
-				hearts8 = true;
-			}
-			if(value == 9){
-				hearts9 = true;
-			}
-			if(value == 10){
-				hearts10 = true;
-			}
-			if(value == 11){
-				jackHearts = true;
-			}
-			if(value == 12){
-				queenHearts = true;
-			}
-			if(value == 13){
-				kingHearts = true;
-			}
-
-		}
-
-		if(suit == 'Clubs'){
-			if(value == 1){
-				aceClubs = true;
-			}
-			if(value == 2){
-				clubs2 = true;
-			}
-			if(value == 3){
-				clubs3 = true;
-			}
-			if(value == 4){
-				clubs4 = true;
-			}
-			if(value == 5){
-				clubs5 = true;
-			}
-			if(value == 6){
-				clubs6 = true;
-			}
-			if(value == 7){
-				clubs7 = true;
-			}
-			if(value == 8){
-				clubs8 = true;
-			}
-			if(value == 9){
-				clubs9 = true;
-			}
-			if(value == 10){
-				clubs10 = true;
-			}
-			if(value == 11){
-				jackClubs = true;
-			}
-			if(value == 12){
-				queenClubs = true;
-			}
-			if(value == 13){
-				kingClubs = true;
-			}
-
-		}
-
-		if(suit == 'Spades'){
-			if(value == 1){
-				aceSpades = true;
-			}
-			if(value == 2){
-				spades2 = true;
-			}
-			if(value == 3){
-				spades3 = true;
-			}
-			if(value == 4){
-				spades4 = true;
-			}
-			if(value == 5){
-				spades5 = true;
-			}
-			if(value == 6){
-				spades6 = true;
-			}
-			if(value == 7){
-				spades7 = true;
-			}
-			if(value == 8){
-				spades8 = true;
-			}
-			if(value == 9){
-				spades9 = true;
-			}
-			if(value == 10){
-				spades10 = true;
-			}
-			if(value == 11){
-				jackSpades = true;
-			}
-			if(value == 12){
-				queenSpades = true;
-			}
-			if(value == 13){
-				kingSpades = true;
-			}
-
-		}
-
-	}
-
-	function reShuffleDeck(){
-		 kingHearts = false;
-		 kingDiamonds = false;
-		 kingClubs = false;
-		 kingSpades = false;
-
-		 queenHearts = false;
-		 queenDiamonds = false;
-		 queenClubs = false;
-		 queenSpades = false;
-
-		 jackHearts = false;
-		 jackDiamonds = false;
-		 jackClubs = false;
-		 jackSpades = false;
-
-		 aceHearts = false;
-		 aceDiamonds = false;
-		 aceClubs = false;
-		 aceSpades = false; 
-
-		 hearts2 = false; 
-		 hearts3 = false;
-		 hearts4 = false;
-		 hearts5 = false;
-		 hearts6 = false;
-		 hearts7 = false;
-		 hearts8 = false;
-		 hearts9 = false;
-		 hearts10 = false;
-
-		 diamonds2 = false;
-		 diamonds3 = false;
-		 diamonds4 = false;
-		 diamonds5 = false;
-		 diamonds6 = false;
-		 diamonds7 = false;
-		 diamonds8 = false;
-		 diamonds9 = false;
-		 diamonds10 = false;
-
-		 spades2 = false;
-		 spades3 = false;
-		 spades4 = false;
-		 spades5 = false;
-		 spades6 = false;
-		 spades7 = false;
-		 spades8 = false;
-		 spades9 = false;
-		 spades10 = false;
-
-		 clubs2 = false;
-		 clubs3 = false;
-		 clubs4 = false;
-		 clubs5 = false;
-		 clubs6 = false;
-		 clubs7 = false;
-		 clubs8 = false;
-		 clubs9 = false;
-		 clubs10 = false;
-
 	}
 
 </script>
