@@ -25,6 +25,10 @@
 	var dealerFirstPlay = true;
 
 	var playerHolds = false;
+    
+    var playerCash = 500;
+    
+    var roundBet = 0;
 
 
 	//player's darw function
@@ -33,6 +37,7 @@
 			suit = getSuit();
 
 			value = getValue();
+            
 
 			if(!isJack && !isACE && !isQueen && !isKing){
 				document.getElementById("playerDrew").innerHTML = "You drew the " + value + " of " + suit;
@@ -357,7 +362,7 @@
 				dealersTurn = false;
 				playersTurn = false;
 		}
-		if(dealersHand == playersHand && dealersHand > 17){
+		if(dealersHand == playersHand && dealersHand >= 17){
 			document.getElementById("endGame").innerHTML = "TIE GAME! Try again...";
 			dealersTurn = false;
 			playersTurn = false;
@@ -392,6 +397,26 @@
 		}
 		
 	}
+    
+    function addBet100(){
+        if(playerCash >= 100){
+            playerCash -= 100;
+            roundBet += 100;
+        }
+
+        document.getElementById("playerBet").innerHTML = "Player's current bet is " + roundBet;
+
+    }
+
+    function removeBet100(){
+        if(roundBet >= 100){
+            roundBet -= 100;
+            playerCash += 100;
+        }
+
+        document.getElementById("playerBet").innerHTML = "Player's current bet is " + roundBet;
+
+    }
 
 </script>
 <center>
@@ -406,11 +431,20 @@
 <input type=button value="HIT" onClick="drawCard(); finishGame();" >
 <br>
 <input type=button value="HOLD" onClick="playerHold(); finishGame();">
+
+<p>Add your Bet</p>
+<input type=button value ="Add Bet" onClick="addBet100();">
+<br>
+<input type=button value ="Remove Bet" onClick="removeBet100();">
+<p>Your Current bet</p>
+<p id="playerBet"></p>
+
 <p>Card Drawn</p>
 <p id="playerDrew"></p>
 <p id="playerScore"></p>
+<p id="playerBet"></p>
 <p id = "endGame"></p>
-<input type =button value="Reset Round" onClick="newRound();">
+<input type=button value="Reset Round" onClick="newRound();">
 
 </center>
 
