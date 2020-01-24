@@ -30,6 +30,8 @@
     
     var roundBet = 0;
 
+    var firstCardPlayed = false;
+
 
 	//player's darw function
 	function drawCard(){
@@ -38,6 +40,9 @@
 
 			value = getValue();
             
+			if(playersTurn && !firstCardPlayed){
+				firstCardPlayed = true;
+			}
 
 			if(!isJack && !isACE && !isQueen && !isKing){
 				document.getElementById("playerDrew").innerHTML = "You drew the " + value + " of " + suit;
@@ -348,19 +353,29 @@
 		dealerFirstPlay = true;
 		playerHolds = false;
 
-		document.getElementById("playerScore").innerHTML = playersHand;
-		document.getElementById("dealerScore").innerHTML = dealersHand;
+		playerCash = roundBet + playerCash;
+
+		roundBet = 0;
+
+		firstCardPlayed = false;
+
+		document.getElementById("playerScore").innerHTML = "";
+		document.getElementById("dealerScore").innerHTML = "";
 		document.getElementById("playerDrew").innerHTML = "";
 		document.getElementById("dealerDelt").innerHTML = "";
 		document.getElementById("endGame").innerHTML = "";
+		document.getElementById("playerBet").innerHTML = "";
+        document.getElementById("playerBank").innerHTML = "Your current bank is $" + playerCash;
 
 	}
 
 	function finishGame(){
 		if(dealersHand >= 17 && dealersHand < playersHand){
-				document.getElementById("endGame").innerHTML = "Dealer cannot play anymore. YOU WIN!!!";
-				dealersTurn = false;
-				playersTurn = false;
+			document.getElementById("endGame").innerHTML = "Dealer cannot play anymore. YOU WIN!!!";
+			dealersTurn = false;
+			playersTurn = false;
+
+			roundBet = roundBet * 2;
 		}
 		if(dealersHand == playersHand && dealersHand >= 17){
 			document.getElementById("endGame").innerHTML = "TIE GAME! Try again...";
@@ -368,27 +383,33 @@
 			playersTurn = false;
 
 		}
-		if(dealersHand > playersHand && playerHolds){
+		if(dealersHand > playersHand && playerHolds && dealersHand < 21){
 			document.getElementById("endGame").innerHTML = "Dealer beats your score. DEALER WINS!!!";
 			dealersTurn = false;
 			playersTurn = false;
+
+			roundBet = 0;
 
 		}
 		if(playersHand > 21){
 			playersTurn = false;
 			dealersTurn = false;
 			document.getElementById("endGame").innerHTML = "You BUSTED!!";
+
+			roundBet = 0;
 		}
 		if(dealersHand > 21){
 			playersTurn = false;
 			dealersTurn = false;
 			document.getElementById("endGame").innerHTML = "Dealer BUSTED!! You Win!!";
+
+			roundBet = roundBet * 2;
 		}
 
 	}
 
 	function playerHold(){
-		if(playersTurn){
+		if(playersTurn && !dealersTurn){
 			document.getElementById("playerDrew").innerHTML = "Player is holding at " + playersHand;
 			playersTurn = false;
 			dealersTurn = true;
@@ -399,22 +420,31 @@
 	}
     
     function addBet100(){
-        if(playerCash >= 100){
-            playerCash -= 100;
-            roundBet += 100;
-        }
+    	if(playersTurn && !dealersTurn && !firstCardPlayed){
+    		if(playerCash >= 100){
+	            playerCash -= 100;
+	            roundBet += 100;
 
-        document.getElementById("playerBet").innerHTML = "Player's current bet is " + roundBet;
+	            document.getElementById("playerBet").innerHTML = "Player's current bet is " + roundBet;
+        		document.getElementById("playerBank").innerHTML = "Your current bank is $" + playerCash;
+	        }
+
+    	}
 
     }
 
     function removeBet100(){
-        if(roundBet >= 100){
-            roundBet -= 100;
-            playerCash += 100;
-        }
+    	if(playersTurn && !dealersTurn && !firstCardPlayed){
+    		if(roundBet >= 100){
+	            roundBet -= 100;
+	            playerCash += 100;
 
-        document.getElementById("playerBet").innerHTML = "Player's current bet is " + roundBet;
+	            document.getElementById("playerBet").innerHTML = "Player's current bet is " + roundBet;
+        		document.getElementById("playerBank").innerHTML = "Your current bank is $" + playerCash;
+	        }
+    	}
+
+        
 
     }
 
@@ -427,22 +457,22 @@
 <p id="dealerDelt"></p>
 <p id="dealerScore"></p>
 <br>
-<h2>Click to draw card</h2>
-<input type=button value="HIT" onClick="drawCard(); finishGame();" >
-<br>
-<input type=button value="HOLD" onClick="playerHold(); finishGame();">
-
-<p>Add your Bet</p>
+<h2>Add your Bet</h2>
 <input type=button value ="Add Bet" onClick="addBet100();">
 <br>
 <input type=button value ="Remove Bet" onClick="removeBet100();">
 <p>Your Current bet</p>
 <p id="playerBet"></p>
+<p id="playerBank">Your current bank is $500</p>
+<br>
+<h2>Click to draw card</h2>
+<input type=button value="HIT" onClick="drawCard(); finishGame();" >
+<br>
+<input type=button value="HOLD" onClick="playerHold(); finishGame();">
 
 <p>Card Drawn</p>
 <p id="playerDrew"></p>
 <p id="playerScore"></p>
-<p id="playerBet"></p>
 <p id = "endGame"></p>
 <input type=button value="Reset Round" onClick="newRound();">
 
