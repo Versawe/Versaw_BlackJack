@@ -32,6 +32,12 @@
 
     var firstCardPlayed = false;
 
+    var secondCardPlayed = false;
+
+    var thirdCardPlayed = false;
+
+    var playerDD = false;
+
 
 	//player's darw function
 	function drawCard(){
@@ -40,10 +46,16 @@
 
 			value = getValue();
             
+            if(playersTurn && firstCardPlayed && secondCardPlayed && !thirdCardPlayed){
+				thirdCardPlayed = true;
+			}
+            if(playersTurn && firstCardPlayed && !secondCardPlayed){
+				secondCardPlayed = true;
+			}
 			if(playersTurn && !firstCardPlayed){
 				firstCardPlayed = true;
 			}
-
+			
 			if(!isJack && !isACE && !isQueen && !isKing){
 				document.getElementById("playerDrew").innerHTML = "You drew the " + value + " of " + suit;
 				document.getElementById("playerScore").innerHTML = playersHand;
@@ -66,6 +78,10 @@
 				document.getElementById("playerDrew").innerHTML = "You drew the Queen of " + suit;
 				document.getElementById("playerScore").innerHTML = playersHand;
 
+			}
+
+			if(playerDD){
+				document.getElementById("playerDrew").innerHTML = "Player is doubling down! The bet is up to " + roundBet + " now!";
 			}
 
 		}
@@ -358,6 +374,10 @@
 		roundBet = 0;
 
 		firstCardPlayed = false;
+		secondCardPlayed = false;
+		thirdCardPlayed = false;
+
+		playerDD = false;
 
 		document.getElementById("playerScore").innerHTML = "";
 		document.getElementById("dealerScore").innerHTML = "";
@@ -383,7 +403,15 @@
 			playersTurn = false;
 
 		}
-		if(dealersHand > playersHand && playerHolds && dealersHand < 21){
+		if(dealersHand > playersHand && playerHolds && dealersHand <= 21){
+			document.getElementById("endGame").innerHTML = "Dealer beats your score. DEALER WINS!!!";
+			dealersTurn = false;
+			playersTurn = false;
+
+			roundBet = 0;
+
+		}
+		if(dealersHand > playersHand && playerDD && dealersHand <= 21){
 			document.getElementById("endGame").innerHTML = "Dealer beats your score. DEALER WINS!!!";
 			dealersTurn = false;
 			playersTurn = false;
@@ -444,8 +472,23 @@
 	        }
     	}
 
-        
+    }
 
+    function doubleDown(){
+    	if(playersTurn && secondCardPlayed && !thirdCardPlayed){
+    		if(roundBet > 0 && playerCash >= roundBet){
+    			playerDD = true;
+    			playerCash = playerCash - roundBet;
+	    		roundBet = roundBet * 2;
+	    		document.getElementById("playerBet").innerHTML = "Player's current bet is " + roundBet;
+	        	document.getElementById("playerBank").innerHTML = "Your current bank is $" + playerCash;
+	    		drawCard();
+	    		playersTurn = false;
+	    		dealersTurn = true;
+
+    		}
+    		
+    	}
     }
 
 </script>
@@ -469,6 +512,8 @@
 <input type=button value="HIT" onClick="drawCard(); finishGame();" >
 <br>
 <input type=button value="HOLD" onClick="playerHold(); finishGame();">
+<br>
+<input type="button" value="DOUBLE DOWN" onClick="doubleDown(); finishGame();">
 
 <p>Card Drawn</p>
 <p id="playerDrew"></p>
