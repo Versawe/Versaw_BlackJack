@@ -5,7 +5,40 @@
 	</title>
 </header>
 
+<center>
+<h2>Black Jack</h2>
+<h2>Dealer Clicks to Deal</h2>
+<input type=button value="DEAL" onClick="dealCard(); finishGame();">
+<p>Face Up Card Dealt</p>
+<p id="dealerDelt"></p>
+<p id="dealerScore"></p>
+<br>
+<h2>Add your Bet</h2>
+<input type=button value ="Add Bet" onClick="addBet100();">
+<br>
+<input type=button value ="Remove Bet" onClick="removeBet100();">
+<p>Your Current bet</p>
+<p id="playerBet"></p>
+<p id="playerBank">Your current bank is $500</p>
+<br>
+<h2>Click to draw card</h2>
+<input type=button value="HIT" onClick="drawCard(); finishGame();" >
+<br>
+<input type=button value="HOLD" onClick="playerHold(); finishGame();">
+<br>
+<input type="button" value="DOUBLE DOWN" onClick="doubleDown(); finishGame();">
+
+<p>Card Drawn</p>
+<p id="playerDrew"></p>
+<p id="playerScore"></p>
+<p id = "endGame"></p>
+<input type=button value="Reset Round" onClick="newRound();">
+
+</center>
+
 <script type="text/javascript">
+	//src = "https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"
+	//var socket = io();
 
 	var suit = '';
 
@@ -37,7 +70,6 @@
     var thirdCardPlayed = false;
 
     var playerDD = false;
-
 
 	//player's darw function
 	function drawCard(){
@@ -492,35 +524,6 @@
     }
 
 </script>
-<center>
-<h2>Black Jack</h2>
-<h2>Dealer Clicks to Deal</h2>
-<input type=button value="DEAL" onClick="dealCard(); finishGame();">
-<p>Face Up Card Dealt</p>
-<p id="dealerDelt"></p>
-<p id="dealerScore"></p>
-<br>
-<h2>Add your Bet</h2>
-<input type=button value ="Add Bet" onClick="addBet100();">
-<br>
-<input type=button value ="Remove Bet" onClick="removeBet100();">
-<p>Your Current bet</p>
-<p id="playerBet"></p>
-<p id="playerBank">Your current bank is $500</p>
-<br>
-<h2>Click to draw card</h2>
-<input type=button value="HIT" onClick="drawCard(); finishGame();" >
-<br>
-<input type=button value="HOLD" onClick="playerHold(); finishGame();">
-<br>
-<input type="button" value="DOUBLE DOWN" onClick="doubleDown(); finishGame();">
 
-<p>Card Drawn</p>
-<p id="playerDrew"></p>
-<p id="playerScore"></p>
-<p id = "endGame"></p>
-<input type=button value="Reset Round" onClick="newRound();">
-
-</center>
 
 </html>
