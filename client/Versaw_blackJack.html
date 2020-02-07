@@ -3,7 +3,67 @@
 	<title>
 		Eric Versaw's Black Jack Game
 	</title>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 </header>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+
+<script src = "https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
+
+<style>
+	body{
+		margin-top: 30px;
+	}
+	
+</style>
+
+<body>
+	<div class ="container">
+		<div class="row">
+			<div class="col-md-4">
+				<div class="well">
+					<h3>Online Users</h3>
+					<ul class="list-group" id="users"></ul>
+				</div>
+
+			</div>
+			<div class="col-md-8">
+					<div class="chat" id="chat"></div>
+
+					<form id="messageForm">
+						<div class="form-group">
+							<label>Enter Message</label>
+							<textarea class="form-control" id="message"></textarea>
+							<br>
+							<input type="submit" class="btn btn-primary" value="Send Message" />
+
+						</div>
+					</form>
+			</div>
+		</div>
+		
+	</div>
+
+	<script>
+		$(function(){
+			var socket = io.connect();
+			var $messageForm = $('#messageForm');
+			var $message = $('#message');
+			var $chat = $('#chat');
+
+			$messageForm.submit(function(e){
+				e.preventDefault();
+				socket.emit('send message', $message.val());
+				$message.val('');
+			});
+
+			socket.on('new message', function(data){
+				$chat.append('<div class="well">' + data.msg+'</div>');
+			});
+		});
+	</script>
+	
+</body>
 
 <center>
 <h2>Black Jack</h2>
@@ -38,7 +98,7 @@
 
 <script type="text/javascript">
 	//src = "https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"
-	//var socket = io();
+	var socket = io();
 
 	var suit = '';
 
