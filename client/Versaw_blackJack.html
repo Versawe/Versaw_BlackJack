@@ -61,32 +61,38 @@
 			<div>
 				<center>
 				<h2>Black Jack</h2>
+				<br>
+				<input type="button" value="Send Variables to Server" onClick= "variablesToServer(); updateTextOnClients();"/>
+				<br>
+				<input type="button" value = "Recevive from Server" onClick = "receivedFromServer(); updateTextOnClients();"/>
+				<br>
 				<h2>Dealer Clicks to Deal</h2>
-				<input type=button value="DEAL" onClick="dealCard(); finishGame();">
+				<input type=button value="DEAL" onClick="dealCard(); finishGame();"/>
 				<p>Face Up Card Dealt</p>
 				<p id="dealerDelt"></p>
 				<p id="dealerScore"></p>
 				<br>
 				<h2>Add your Bet</h2>
-				<input type=button value ="Add Bet" onClick="addBet100();">
+				<input type=button value ="Add Bet" onClick="addBet100();"/>
 				<br>
-				<input type=button value ="Remove Bet" onClick="removeBet100();">
+				<input type=button value ="Remove Bet" onClick="removeBet100();"/>
 				<p>Your Current bet</p>
 				<p id="playerBet"></p>
 				<p id="playerBank">Your current bank is $500</p>
 				<br>
 				<h2>Click to draw card</h2>
-				<input type=button value="HIT" onClick="drawCard(); finishGame();" >
+				<input type=button value="HIT" onClick="drawCard(); finishGame();" />
 				<br>
-				<input type=button value="HOLD" onClick="playerHold(); finishGame();">
+				<input type=button value="HOLD" onClick="playerHold(); finishGame();"/>
 				<br>
-				<input type="button" value="DOUBLE DOWN" onClick="doubleDown(); finishGame();">
+				<input type="button" value="DOUBLE DOWN" onClick="doubleDown(); finishGame();"/>
 
 				<p>Card Drawn</p>
 				<p id="playerDrew"></p>
 				<p id="playerScore"></p>
 				<p id = "endGame"></p>
-				<input type=button value="Reset Round" onClick="newRound();">
+				<br>
+				<input type=button value="Reset Round" onClick="newRound();"/>
 
 				</center>
 			</div>
@@ -98,8 +104,8 @@
 </body>
 
 <script>
+	var socket = io.connect();
 		$(function(){
-			var socket = io.connect();
 			var $messageForm = $('#messageForm');
 			var $message = $('#message');
 			var $chat = $('#chat');
@@ -139,36 +145,38 @@
 			});
 		});
 
-		var suit = '';
+		var suit;
 
-		var value = 0;
+		var value;
 
-		var isJack = false;
-		var isKing = false;
-		var isQueen = false;
-		var isACE = false;
+		var isJack;
+		var isKing;
+		var isQueen;
+		var isACE;
 
-		var dealersTurn = true;
-		var playersTurn = false;
+		var dealersTurn;
+		var playersTurn;
 
-		var dealersHand = 0;
-		var playersHand = 0;
+		var dealersHand;
+		var playersHand;
 
-		var dealerFirstPlay = true;
+		var dealerFirstPlay;
 
-		var playerHolds = false;
+		var playerHolds;
 	    
-	    var playerCash = 500;
+	    var playerCash;
 	    
-	    var roundBet = 0;
+	    var roundBet;
 
-	    var firstCardPlayed = false;
+	    var firstCardPlayed;
 
-	    var secondCardPlayed = false;
+	    var secondCardPlayed;
 
-	    var thirdCardPlayed = false;
+	    var thirdCardPlayed;
 
-	    var playerDD = false;
+	    var playerDD;
+
+	    receivedFromServer();
 
 		//player's darw function
 		function drawCard(){
@@ -622,12 +630,165 @@
 	    	}
 	    }
 
-	    function updateVariablesToServer(){
-	    	socket.emit('update to clients', function(data){
+	    function variablesToServer(){
 
+	    	socket.emit('update variable 1',{
+	    		var1: suit
 
+		    	});
+		    socket.emit('update variable 2',{
+		    		var2: value
+
+		    	});
+		    socket.emit('update variable 3',{
+		    		var3: isJack
+
+		    	});
+		    socket.emit('update variable 4',{
+		    		var4: isQueen
+
+		    	});
+		    socket.emit('update variable 5',{
+		    		var5: isKing
+
+		    	});
+		    socket.emit('update variable 6',{
+		    		var6: isACE
+
+		    	});
+		    socket.emit('update variable 7',{
+		    		var7: dealersTurn
+
+		    	});
+		    socket.emit('update variable 8',{
+		    		var8: playersTurn
+
+		    	});
+		    socket.emit('update variable 9',{
+		    		var9: dealersHand
+
+		    	});
+		    socket.emit('update variable 10',{
+		    		var10: playersHand
+
+		    	});
+		    socket.emit('update variable 11',{
+		    		var11: dealerFirstPlay
+
+		    	});
+		    socket.emit('update variable 12',{
+		    		var12: playerHolds
+
+		    	});
+		    socket.emit('update variable 13',{
+		    		var13: playerCash
+
+		    	});
+		    socket.emit('update variable 14',{
+		    		var14: roundBet
+
+		    	});
+		    socket.emit('update variable 15',{
+		    		var15: firstCardPlayed
+
+		    	});
+		    socket.emit('update variable 16',{
+		    		var16: secondCardPlayed
+
+		    	});
+		    socket.emit('update variable 17',{
+		    		var17: thirdCardPlayed
+
+		    	});
+		    socket.emit('update variable 18',{
+		    		var18: playerDD
+
+		    	});
+	    }
+
+	    function receivedFromServer(){
+	    	socket.on('server to client 1', function(data){
+	    		suit = data.toclient1;
+	 
+	    	});
+	    	socket.on('server to client 2', function(data){
+	    		value = data.toclient2;
+	    		
+	    	});
+	    	socket.on('server to client 3', function(data){
+	    		isJack = data.toclient3;
+	    		
+	    	});
+	    	socket.on('server to client 4', function(data){
+	    		isKing = data.toclient4;
+	    		
+	    	});
+	    	socket.on('server to client 5', function(data){
+	    		isQueen = data.toclient5;
+	    		
+	    	});
+	    	socket.on('server to client 6', function(data){
+	    		isACE = data.toclient6;
+	    		
+	    	});
+	    	socket.on('server to client 7', function(data){
+	    		dealersTurn = data.toclient7;
+	    		
+	    	});
+	    	socket.on('server to client 8', function(data){
+	    		playersTurn = data.toclient8;
+	    		
+	    	});
+	    	socket.on('server to client 9', function(data){
+	    		dealersHand = data.toclient9;
+	    		
+	    	});
+	    	socket.on('server to client 10', function(data){
+	    		playersHand = data.toclient10;
+	    		
+	    	});
+	    	socket.on('server to client 11', function(data){
+	    		dealerFirstPlay = data.toclient11;
+	    		
+	    	});
+	    	socket.on('server to client 12', function(data){
+	    		playerHolds = data.toclient12;
+	    		
+	    	});
+	    	socket.on('server to client 13', function(data){
+	    		playerCash = data.toclient13;
+	    		
+	    	});
+	    	socket.on('server to client 14', function(data){
+	    		roundBet = data.toclient14;
+	    		
+	    	});
+	    	socket.on('server to client 15', function(data){
+	    		firstCardPlayed = data.toclient15;
+	    		
+	    	});
+	    	socket.on('server to client 16', function(data){
+	    		secondCardPlayed = data.toclient16;
+	    		
+	    	});
+	    	socket.on('server to client 17', function(data){
+	    		thirdCardPlayed = data.toclient17;
+	    		
+	    	});
+	    	socket.on('server to client 18', function(data){
+	    		playerDD = data.toclient18;
+	    		
 	    	});
 	    }
+
+	    function updateTextOnClients(){
+			document.getElementById("playerBet").innerHTML = "Player's current bet is " + roundBet;
+	        document.getElementById("playerBank").innerHTML = "Your current bank is $" + playerCash;
+	        document.getElementById("playerScore").innerHTML = playersHand;
+	        document.getElementById("dealerScore").innerHTML = dealersHand;
+	        finishGame();
+	    }
+
 
 </script>
 
