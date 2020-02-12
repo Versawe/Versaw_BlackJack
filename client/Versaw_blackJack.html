@@ -18,9 +18,6 @@
 	#messageArea{
 		display: none;
 	}
-	#gameArea{
-		display: none;
-	}
 	
 </style>
 
@@ -111,7 +108,6 @@
 			var $userForm = $('#userForm');
 			var $users = $('#users');
 			var $username = $('#username');
-			var $gameArea = $('gameArea');
 
 			$messageForm.submit(function(e){
 				e.preventDefault();
@@ -128,8 +124,7 @@
 				socket.emit('new user', $username.val(), function(data){
 					if(data){
 						$userFormArea.hide();
-						$messageArea.show();
-						$gameArea.show();
+						$messageArea.slideDown(1000);
 					}
 				});
 				$username.val('');
@@ -143,495 +138,498 @@
 				$users.html(html);
 			});
 		});
-	</script>
 
-	<script>
-	
-	var socket = io.connect();
+		var suit = '';
 
-	var suit = '';
+		var value = 0;
 
-	var value = 0;
+		var isJack = false;
+		var isKing = false;
+		var isQueen = false;
+		var isACE = false;
 
-	var isJack = false;
-	var isKing = false;
-	var isQueen = false;
-	var isACE = false;
+		var dealersTurn = true;
+		var playersTurn = false;
 
-	var dealersTurn = true;
-	var playersTurn = false;
+		var dealersHand = 0;
+		var playersHand = 0;
 
-	var dealersHand = 0;
-	var playersHand = 0;
+		var dealerFirstPlay = true;
 
-	var dealerFirstPlay = true;
+		var playerHolds = false;
+	    
+	    var playerCash = 500;
+	    
+	    var roundBet = 0;
 
-	var playerHolds = false;
-    
-    var playerCash = 500;
-    
-    var roundBet = 0;
+	    var firstCardPlayed = false;
 
-    var firstCardPlayed = false;
+	    var secondCardPlayed = false;
 
-    var secondCardPlayed = false;
+	    var thirdCardPlayed = false;
 
-    var thirdCardPlayed = false;
+	    var playerDD = false;
 
-    var playerDD = false;
-
-	//player's darw function
-	function drawCard(){
-		if(!dealersTurn && playersTurn && !playerHolds){
-			suit = getSuit();
-
-			value = getValue();
-            
-            if(playersTurn && firstCardPlayed && secondCardPlayed && !thirdCardPlayed){
-				thirdCardPlayed = true;
-			}
-            if(playersTurn && firstCardPlayed && !secondCardPlayed){
-				secondCardPlayed = true;
-			}
-			if(playersTurn && !firstCardPlayed){
-				firstCardPlayed = true;
-			}
-			
-			if(!isJack && !isACE && !isQueen && !isKing){
-				document.getElementById("playerDrew").innerHTML = "You drew the " + value + " of " + suit;
-				document.getElementById("playerScore").innerHTML = playersHand;
-			}
-			if(isACE){
-				document.getElementById("playerDrew").innerHTML = "You drew the Ace of " + suit;
-				document.getElementById("playerScore").innerHTML = playersHand;
-			}
-			if(isKing){
-				document.getElementById("playerDrew").innerHTML = "You drew the King of " + suit;
-				document.getElementById("playerScore").innerHTML = playersHand;
-
-			}
-			if(isJack){
-				document.getElementById("playerDrew").innerHTML = "You drew the Jack of " + suit;
-				document.getElementById("playerScore").innerHTML = playersHand;
-
-			}
-			if(isQueen){
-				document.getElementById("playerDrew").innerHTML = "You drew the Queen of " + suit;
-				document.getElementById("playerScore").innerHTML = playersHand;
-
-			}
-
-			if(playerDD){
-				document.getElementById("playerDrew").innerHTML = "Player is doubling down! The bet is up to " + roundBet + " now!";
-			}
-
-		}
-
-	}
-
-	function dealCard(){
-		if(dealersTurn && !playersTurn){
-
-			if(dealersHand < 17){
-
+		//player's darw function
+		function drawCard(){
+			if(!dealersTurn && playersTurn && !playerHolds){
 				suit = getSuit();
 
 				value = getValue();
-
+	            
+	            if(playersTurn && firstCardPlayed && secondCardPlayed && !thirdCardPlayed){
+					thirdCardPlayed = true;
+				}
+	            if(playersTurn && firstCardPlayed && !secondCardPlayed){
+					secondCardPlayed = true;
+				}
+				if(playersTurn && !firstCardPlayed){
+					firstCardPlayed = true;
+				}
+				
 				if(!isJack && !isACE && !isQueen && !isKing){
-					document.getElementById("dealerDelt").innerHTML = "Dealer Played " + value + " of " + suit;
-					document.getElementById("dealerScore").innerHTML = dealersHand;
+					document.getElementById("playerDrew").innerHTML = "You drew the " + value + " of " + suit;
+					document.getElementById("playerScore").innerHTML = playersHand;
 				}
 				if(isACE){
-					printVarDealer = "Dealer Played the Ace of " + suit;
-					document.getElementById("dealerDelt").innerHTML = "Dealer Played the Ace of " + suit;
-					document.getElementById("dealerScore").innerHTML = dealersHand;
+					document.getElementById("playerDrew").innerHTML = "You drew the Ace of " + suit;
+					document.getElementById("playerScore").innerHTML = playersHand;
 				}
 				if(isKing){
-					document.getElementById("dealerDelt").innerHTML = "Dealer Played the King of " + suit;
-					document.getElementById("dealerScore").innerHTML = dealersHand;
+					document.getElementById("playerDrew").innerHTML = "You drew the King of " + suit;
+					document.getElementById("playerScore").innerHTML = playersHand;
 
 				}
 				if(isJack){
-					document.getElementById("dealerDelt").innerHTML = "Dealer Played the Jack of " + suit;
-					document.getElementById("dealerScore").innerHTML = dealersHand;
+					document.getElementById("playerDrew").innerHTML = "You drew the Jack of " + suit;
+					document.getElementById("playerScore").innerHTML = playersHand;
 
 				}
 				if(isQueen){
-					document.getElementById("dealerDelt").innerHTML = "Dealer Played the Queen of " + suit;
-					document.getElementById("dealerScore").innerHTML = dealersHand;
+					document.getElementById("playerDrew").innerHTML = "You drew the Queen of " + suit;
+					document.getElementById("playerScore").innerHTML = playersHand;
 
 				}
 
-				if(dealerFirstPlay){
-					dealersTurn = false;
-					playersTurn = true;
-					dealerFirstPlay = false;
-
+				if(playerDD){
+					document.getElementById("playerDrew").innerHTML = "Player is doubling down! The bet is up to " + roundBet + " now!";
 				}
 
 			}
 
 		}
 
-	}
-
-	//function to get random suit
-	function getSuit(){
-
-		suitChoice = Math.floor(Math.random() * 4) + 1;
-
-		if(suitChoice == 1){
-			suitFinal = 'Diamonds';
-
-		}
-		if(suitChoice == 2){
-			suitFinal = 'Hearts';
-
-		}
-		if(suitChoice == 3){
-			suitFinal = 'Clubs';
-
-		}
-		if(suitChoice == 4){
-			suitFinal = 'Spades';
-
-		}
-
-
-		return suitFinal;
-
-	}
-
-	//random function to get the value
-	function getValue(){
-
-		isJack = false;
-		isKing = false;
-		isQueen = false;
-		isACE = false;
-
-		valueChoice = Math.floor(Math.random() * 13) + 1;
-
-		if(valueChoice == 1){
-			valueFinal = 1;
-			isACE = true;
+		function dealCard(){
 			if(dealersTurn && !playersTurn){
-				if(dealersHand > 10){
-					dealersHand += 1;
 
-				}
-				if(dealersHand <= 10){
-					dealersHand += 11;
+				if(dealersHand < 17){
+
+					suit = getSuit();
+
+					value = getValue();
+
+					if(!isJack && !isACE && !isQueen && !isKing){
+						document.getElementById("dealerDelt").innerHTML = "Dealer Played " + value + " of " + suit;
+						document.getElementById("dealerScore").innerHTML = dealersHand;
+					}
+					if(isACE){
+						printVarDealer = "Dealer Played the Ace of " + suit;
+						document.getElementById("dealerDelt").innerHTML = "Dealer Played the Ace of " + suit;
+						document.getElementById("dealerScore").innerHTML = dealersHand;
+					}
+					if(isKing){
+						document.getElementById("dealerDelt").innerHTML = "Dealer Played the King of " + suit;
+						document.getElementById("dealerScore").innerHTML = dealersHand;
+
+					}
+					if(isJack){
+						document.getElementById("dealerDelt").innerHTML = "Dealer Played the Jack of " + suit;
+						document.getElementById("dealerScore").innerHTML = dealersHand;
+
+					}
+					if(isQueen){
+						document.getElementById("dealerDelt").innerHTML = "Dealer Played the Queen of " + suit;
+						document.getElementById("dealerScore").innerHTML = dealersHand;
+
+					}
+
+					if(dealerFirstPlay){
+						dealersTurn = false;
+						playersTurn = true;
+						dealerFirstPlay = false;
+
+					}
 
 				}
 
 			}
-			if(!dealersTurn && playersTurn){
-				if(playersHand > 10){
-					playersHand += 1;
+
+		}
+
+		//function to get random suit
+		function getSuit(){
+
+			suitChoice = Math.floor(Math.random() * 4) + 1;
+
+			if(suitChoice == 1){
+				suitFinal = 'Diamonds';
+
+			}
+			if(suitChoice == 2){
+				suitFinal = 'Hearts';
+
+			}
+			if(suitChoice == 3){
+				suitFinal = 'Clubs';
+
+			}
+			if(suitChoice == 4){
+				suitFinal = 'Spades';
+
+			}
+
+
+			return suitFinal;
+
+		}
+
+		//random function to get the value
+		function getValue(){
+
+			isJack = false;
+			isKing = false;
+			isQueen = false;
+			isACE = false;
+
+			valueChoice = Math.floor(Math.random() * 13) + 1;
+
+			if(valueChoice == 1){
+				valueFinal = 1;
+				isACE = true;
+				if(dealersTurn && !playersTurn){
+					if(dealersHand > 10){
+						dealersHand += 1;
+
+					}
+					if(dealersHand <= 10){
+						dealersHand += 11;
+
+					}
 
 				}
-				if(playersHand <= 10){
-					playersHand += 11;
+				if(!dealersTurn && playersTurn){
+					if(playersHand > 10){
+						playersHand += 1;
+
+					}
+					if(playersHand <= 10){
+						playersHand += 11;
+
+					}
+				}
+				//ace
+			}
+			if(valueChoice == 2){
+				valueFinal = 2;
+				if(dealersTurn && !playersTurn){
+					dealersHand += 2;
 
 				}
-			}
-			//ace
-		}
-		if(valueChoice == 2){
-			valueFinal = 2;
-			if(dealersTurn && !playersTurn){
-				dealersHand += 2;
+				if(!dealersTurn && playersTurn){
+					playersHand += 2;
+
+				}
 
 			}
-			if(!dealersTurn && playersTurn){
-				playersHand += 2;
+			if(valueChoice == 3){
+				valueFinal = 3;
+				if(dealersTurn && !playersTurn){
+					dealersHand += 3;
+
+				}
+				if(!dealersTurn && playersTurn){
+					playersHand += 3;
+
+				}
 
 			}
+			if(valueChoice == 4){
+				valueFinal = 4;
+				if(dealersTurn && !playersTurn){
+					dealersHand += 4;
 
-		}
-		if(valueChoice == 3){
-			valueFinal = 3;
-			if(dealersTurn && !playersTurn){
-				dealersHand += 3;
+				}
+				if(!dealersTurn && playersTurn){
+					playersHand += 4;
 
-			}
-			if(!dealersTurn && playersTurn){
-				playersHand += 3;
-
-			}
-
-		}
-		if(valueChoice == 4){
-			valueFinal = 4;
-			if(dealersTurn && !playersTurn){
-				dealersHand += 4;
+				}
 
 			}
-			if(!dealersTurn && playersTurn){
-				playersHand += 4;
+			if(valueChoice == 5){
+				valueFinal = 5;
+				if(dealersTurn && !playersTurn){
+					dealersHand += 5;
+
+				}
+				if(!dealersTurn && playersTurn){
+					playersHand += 5;
+
+				}
 
 			}
+			if(valueChoice == 6){
+				valueFinal = 6;
+				if(dealersTurn && !playersTurn){
+					dealersHand += 6;
 
-		}
-		if(valueChoice == 5){
-			valueFinal = 5;
-			if(dealersTurn && !playersTurn){
-				dealersHand += 5;
+				}
+				if(!dealersTurn && playersTurn){
+					playersHand += 6;
 
-			}
-			if(!dealersTurn && playersTurn){
-				playersHand += 5;
-
-			}
-
-		}
-		if(valueChoice == 6){
-			valueFinal = 6;
-			if(dealersTurn && !playersTurn){
-				dealersHand += 6;
+				}
 
 			}
-			if(!dealersTurn && playersTurn){
-				playersHand += 6;
+			if(valueChoice == 7){
+				valueFinal = 7;
+				if(dealersTurn && !playersTurn){
+					dealersHand += 7;
+
+				}
+				if(!dealersTurn && playersTurn){
+					playersHand += 7;
+
+				}
 
 			}
+			if(valueChoice == 8){
+				valueFinal = 8;
+				if(dealersTurn && !playersTurn){
+					dealersHand += 8;
 
-		}
-		if(valueChoice == 7){
-			valueFinal = 7;
-			if(dealersTurn && !playersTurn){
-				dealersHand += 7;
+				}
+				if(!dealersTurn && playersTurn){
+					playersHand += 8;
 
-			}
-			if(!dealersTurn && playersTurn){
-				playersHand += 7;
-
-			}
-
-		}
-		if(valueChoice == 8){
-			valueFinal = 8;
-			if(dealersTurn && !playersTurn){
-				dealersHand += 8;
+				}
 
 			}
-			if(!dealersTurn && playersTurn){
-				playersHand += 8;
+			if(valueChoice == 9){
+				valueFinal = 9;
+				if(dealersTurn && !playersTurn){
+					dealersHand += 9;
+
+				}
+				if(!dealersTurn && playersTurn){
+					playersHand += 9;
+
+				}
 
 			}
+			if(valueChoice == 10){
+				valueFinal = 10;
+				if(dealersTurn && !playersTurn){
+					dealersHand += 10;
 
-		}
-		if(valueChoice == 9){
-			valueFinal = 9;
-			if(dealersTurn && !playersTurn){
-				dealersHand += 9;
+				}
+				if(!dealersTurn && playersTurn){
+					playersHand += 10;
 
-			}
-			if(!dealersTurn && playersTurn){
-				playersHand += 9;
-
-			}
-
-		}
-		if(valueChoice == 10){
-			valueFinal = 10;
-			if(dealersTurn && !playersTurn){
-				dealersHand += 10;
+				}
 
 			}
-			if(!dealersTurn && playersTurn){
-				playersHand += 10;
+			if(valueChoice == 11){
+				valueFinal = 10;
+				isJack = true;
+				if(dealersTurn && !playersTurn){
+					dealersHand += 10;
 
+				}
+				if(!dealersTurn && playersTurn){
+					playersHand += 10;
+
+				}
+				//jack
+			}
+			if(valueChoice == 12){
+				valueFinal = 10;
+				isQueen = true;
+				if(dealersTurn && !playersTurn){
+					dealersHand += 10;
+
+				}
+				if(!dealersTurn && playersTurn){
+					playersHand += 10;
+
+				}
+				//queen
+			}
+			if(valueChoice == 13){
+				valueFinal = 10;
+				isKing = true;
+				if(dealersTurn && !playersTurn){
+					dealersHand += 10;
+
+				}
+				if(!dealersTurn && playersTurn){
+					playersHand += 10;
+
+				}
+				//king
 			}
 
-		}
-		if(valueChoice == 11){
-			valueFinal = 10;
-			isJack = true;
-			if(dealersTurn && !playersTurn){
-				dealersHand += 10;
 
-			}
-			if(!dealersTurn && playersTurn){
-				playersHand += 10;
-
-			}
-			//jack
-		}
-		if(valueChoice == 12){
-			valueFinal = 10;
-			isQueen = true;
-			if(dealersTurn && !playersTurn){
-				dealersHand += 10;
-
-			}
-			if(!dealersTurn && playersTurn){
-				playersHand += 10;
-
-			}
-			//queen
-		}
-		if(valueChoice == 13){
-			valueFinal = 10;
-			isKing = true;
-			if(dealersTurn && !playersTurn){
-				dealersHand += 10;
-
-			}
-			if(!dealersTurn && playersTurn){
-				playersHand += 10;
-
-			}
-			//king
+			return valueFinal;
 		}
 
+		function newRound(){
+			suit = '';
 
-		return valueFinal;
-	}
+			value = 0;
 
-	function newRound(){
-		suit = '';
+			isJack = false;
+			isKing = false;
+			isQueen = false;
+			isACE = false;
 
-		value = 0;
-
-		isJack = false;
-		isKing = false;
-		isQueen = false;
-		isACE = false;
-
-		dealersTurn = true;
-		playersTurn = false;
-
-		dealersHand = 0;
-		playersHand = 0;
-
-		dealerFirstPlay = true;
-		playerHolds = false;
-
-		playerCash = roundBet + playerCash;
-
-		roundBet = 0;
-
-		firstCardPlayed = false;
-		secondCardPlayed = false;
-		thirdCardPlayed = false;
-
-		playerDD = false;
-
-		document.getElementById("playerScore").innerHTML = "";
-		document.getElementById("dealerScore").innerHTML = "";
-		document.getElementById("playerDrew").innerHTML = "";
-		document.getElementById("dealerDelt").innerHTML = "";
-		document.getElementById("endGame").innerHTML = "";
-		document.getElementById("playerBet").innerHTML = "";
-        document.getElementById("playerBank").innerHTML = "Your current bank is $" + playerCash;
-
-	}
-
-	function finishGame(){
-		if(dealersHand >= 17 && dealersHand < playersHand){
-			document.getElementById("endGame").innerHTML = "Dealer cannot play anymore. YOU WIN!!!";
-			dealersTurn = false;
-			playersTurn = false;
-
-			roundBet = roundBet * 2;
-		}
-		if(dealersHand == playersHand && dealersHand >= 17){
-			document.getElementById("endGame").innerHTML = "TIE GAME! Try again...";
-			dealersTurn = false;
-			playersTurn = false;
-
-		}
-		if(dealersHand > playersHand && playerHolds && dealersHand <= 21){
-			document.getElementById("endGame").innerHTML = "Dealer beats your score. DEALER WINS!!!";
-			dealersTurn = false;
-			playersTurn = false;
-
-			roundBet = 0;
-
-		}
-		if(dealersHand > playersHand && playerDD && dealersHand <= 21){
-			document.getElementById("endGame").innerHTML = "Dealer beats your score. DEALER WINS!!!";
-			dealersTurn = false;
-			playersTurn = false;
-
-			roundBet = 0;
-
-		}
-		if(playersHand > 21){
-			playersTurn = false;
-			dealersTurn = false;
-			document.getElementById("endGame").innerHTML = "You BUSTED!!";
-
-			roundBet = 0;
-		}
-		if(dealersHand > 21){
-			playersTurn = false;
-			dealersTurn = false;
-			document.getElementById("endGame").innerHTML = "Dealer BUSTED!! You Win!!";
-
-			roundBet = roundBet * 2;
-		}
-
-	}
-
-	function playerHold(){
-		if(playersTurn && !dealersTurn){
-			document.getElementById("playerDrew").innerHTML = "Player is holding at " + playersHand;
-			playersTurn = false;
 			dealersTurn = true;
-			playerHolds = true;
+			playersTurn = false;
+
+			dealersHand = 0;
+			playersHand = 0;
+
+			dealerFirstPlay = true;
+			playerHolds = false;
+
+			playerCash = roundBet + playerCash;
+
+			roundBet = 0;
+
+			firstCardPlayed = false;
+			secondCardPlayed = false;
+			thirdCardPlayed = false;
+
+			playerDD = false;
+
+			document.getElementById("playerScore").innerHTML = "";
+			document.getElementById("dealerScore").innerHTML = "";
+			document.getElementById("playerDrew").innerHTML = "";
+			document.getElementById("dealerDelt").innerHTML = "";
+			document.getElementById("endGame").innerHTML = "";
+			document.getElementById("playerBet").innerHTML = "";
+	        document.getElementById("playerBank").innerHTML = "Your current bank is $" + playerCash;
 
 		}
-		
-	}
-    
-    function addBet100(){
-    	if(playersTurn && !dealersTurn && !firstCardPlayed){
-    		if(playerCash >= 100){
-	            playerCash -= 100;
-	            roundBet += 100;
 
-	            document.getElementById("playerBet").innerHTML = "Player's current bet is " + roundBet;
-        		document.getElementById("playerBank").innerHTML = "Your current bank is $" + playerCash;
-	        }
+		function finishGame(){
+			if(dealersHand >= 17 && dealersHand < playersHand){
+				document.getElementById("endGame").innerHTML = "Dealer cannot play anymore. YOU WIN!!!";
+				dealersTurn = false;
+				playersTurn = false;
 
-    	}
+				roundBet = roundBet * 2;
+			}
+			if(dealersHand == playersHand && dealersHand >= 17){
+				document.getElementById("endGame").innerHTML = "TIE GAME! Try again...";
+				dealersTurn = false;
+				playersTurn = false;
 
-    }
+			}
+			if(dealersHand > playersHand && playerHolds && dealersHand <= 21){
+				document.getElementById("endGame").innerHTML = "Dealer beats your score. DEALER WINS!!!";
+				dealersTurn = false;
+				playersTurn = false;
 
-    function removeBet100(){
-    	if(playersTurn && !dealersTurn && !firstCardPlayed){
-    		if(roundBet >= 100){
-	            roundBet -= 100;
-	            playerCash += 100;
+				roundBet = 0;
 
-	            document.getElementById("playerBet").innerHTML = "Player's current bet is " + roundBet;
-        		document.getElementById("playerBank").innerHTML = "Your current bank is $" + playerCash;
-	        }
-    	}
+			}
+			if(dealersHand > playersHand && playerDD && dealersHand <= 21){
+				document.getElementById("endGame").innerHTML = "Dealer beats your score. DEALER WINS!!!";
+				dealersTurn = false;
+				playersTurn = false;
 
-    }
+				roundBet = 0;
 
-    function doubleDown(){
-    	if(playersTurn && secondCardPlayed && !thirdCardPlayed){
-    		if(roundBet > 0 && playerCash >= roundBet){
-    			playerDD = true;
-    			playerCash = playerCash - roundBet;
-	    		roundBet = roundBet * 2;
-	    		document.getElementById("playerBet").innerHTML = "Player's current bet is " + roundBet;
-	        	document.getElementById("playerBank").innerHTML = "Your current bank is $" + playerCash;
-	    		drawCard();
-	    		playersTurn = false;
-	    		dealersTurn = true;
+			}
+			if(playersHand > 21){
+				playersTurn = false;
+				dealersTurn = false;
+				document.getElementById("endGame").innerHTML = "You BUSTED!!";
 
-    		}
-    		
-    	}
-    }
+				roundBet = 0;
+			}
+			if(dealersHand > 21){
+				playersTurn = false;
+				dealersTurn = false;
+				document.getElementById("endGame").innerHTML = "Dealer BUSTED!! You Win!!";
+
+				roundBet = roundBet * 2;
+			}
+
+		}
+
+		function playerHold(){
+			if(playersTurn && !dealersTurn){
+				document.getElementById("playerDrew").innerHTML = "Player is holding at " + playersHand;
+				playersTurn = false;
+				dealersTurn = true;
+				playerHolds = true;
+
+			}
+			
+		}
+	    
+	    function addBet100(){
+	    	if(playersTurn && !dealersTurn && !firstCardPlayed){
+	    		if(playerCash >= 100){
+		            playerCash -= 100;
+		            roundBet += 100;
+
+		            document.getElementById("playerBet").innerHTML = "Player's current bet is " + roundBet;
+	        		document.getElementById("playerBank").innerHTML = "Your current bank is $" + playerCash;
+		        }
+
+	    	}
+
+	    }
+
+	    function removeBet100(){
+	    	if(playersTurn && !dealersTurn && !firstCardPlayed){
+	    		if(roundBet >= 100){
+		            roundBet -= 100;
+		            playerCash += 100;
+
+		            document.getElementById("playerBet").innerHTML = "Player's current bet is " + roundBet;
+	        		document.getElementById("playerBank").innerHTML = "Your current bank is $" + playerCash;
+		        }
+	    	}
+
+	    }
+
+	    function doubleDown(){
+	    	if(playersTurn && secondCardPlayed && !thirdCardPlayed){
+	    		if(roundBet > 0 && playerCash >= roundBet){
+	    			playerDD = true;
+	    			playerCash = playerCash - roundBet;
+		    		roundBet = roundBet * 2;
+		    		document.getElementById("playerBet").innerHTML = "Player's current bet is " + roundBet;
+		        	document.getElementById("playerBank").innerHTML = "Your current bank is $" + playerCash;
+		    		drawCard();
+		    		playersTurn = false;
+		    		dealersTurn = true;
+
+	    		}
+	    		
+	    	}
+	    }
+
+	    function updateVariablesToServer(){
+	    	socket.emit('update to clients', function(data){
+
+
+	    	});
+	    }
 
 </script>
+
 
 </html>
