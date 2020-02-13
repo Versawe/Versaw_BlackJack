@@ -526,6 +526,7 @@
 			document.getElementById("playerBet").innerHTML = "";
 	        document.getElementById("playerBank").innerHTML = "Your current bank is $" + playerCash;
 
+
 		}
 
 		function finishGame(){
@@ -709,75 +710,76 @@
 	    function receivedFromServer(){
 	    	socket.on('server to client 1', function(data){
 	    		suit = data.toclient1;
+	    		console.log("Data retrieved from server "+suit);
 	 
 	    	});
 	    	socket.on('server to client 2', function(data){
 	    		value = data.toclient2;
-	    		
+	    		console.log("Data retrieved from server "+value);
 	    	});
 	    	socket.on('server to client 3', function(data){
 	    		isJack = data.toclient3;
-	    		
+	    		console.log("Data retrieved from server "+isJack);
 	    	});
 	    	socket.on('server to client 4', function(data){
 	    		isKing = data.toclient4;
-	    		
+	    		console.log("Data retrieved from server "+isKing);
 	    	});
 	    	socket.on('server to client 5', function(data){
 	    		isQueen = data.toclient5;
-	    		
+	    		console.log("Data retrieved from server "+isQueen);
 	    	});
 	    	socket.on('server to client 6', function(data){
 	    		isACE = data.toclient6;
-	    		
+	    		console.log("Data retrieved from server "+isACE);
 	    	});
 	    	socket.on('server to client 7', function(data){
 	    		dealersTurn = data.toclient7;
-	    		
+	    		console.log("Data retrieved from server "+dealersTurn);
 	    	});
 	    	socket.on('server to client 8', function(data){
 	    		playersTurn = data.toclient8;
-	    		
+	    		console.log("Data retrieved from server "+playersTurn);
 	    	});
 	    	socket.on('server to client 9', function(data){
 	    		dealersHand = data.toclient9;
-	    		
+	    		console.log("Data retrieved from server "+dealersHand);
 	    	});
 	    	socket.on('server to client 10', function(data){
 	    		playersHand = data.toclient10;
-	    		
+	    		console.log("Data retrieved from server "+playersHand);
 	    	});
 	    	socket.on('server to client 11', function(data){
 	    		dealerFirstPlay = data.toclient11;
-	    		
+	    		console.log("Data retrieved from server "+dealerFirstPlay);
 	    	});
 	    	socket.on('server to client 12', function(data){
 	    		playerHolds = data.toclient12;
-	    		
+	    		console.log("Data retrieved from server "+playerHolds);
 	    	});
 	    	socket.on('server to client 13', function(data){
 	    		playerCash = data.toclient13;
-	    		
+	    		console.log("Data retrieved from server "+playerCash);
 	    	});
 	    	socket.on('server to client 14', function(data){
 	    		roundBet = data.toclient14;
-	    		
+	    		console.log("Data retrieved from server "+roundBet);
 	    	});
 	    	socket.on('server to client 15', function(data){
 	    		firstCardPlayed = data.toclient15;
-	    		
+	    		console.log("Data retrieved from server "+firstCardPlayed);
 	    	});
 	    	socket.on('server to client 16', function(data){
 	    		secondCardPlayed = data.toclient16;
-	    		
+	    		console.log("Data retrieved from server "+secondCardPlayed);
 	    	});
 	    	socket.on('server to client 17', function(data){
 	    		thirdCardPlayed = data.toclient17;
-	    		
+	    		console.log("Data retrieved from server "+thirdCardPlayed);
 	    	});
 	    	socket.on('server to client 18', function(data){
 	    		playerDD = data.toclient18;
-	    		
+	    		console.log("Data retrieved from server "+playerDD);
 	    	});
 	    }
 

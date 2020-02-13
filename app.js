@@ -16,12 +16,13 @@ var variable9 = 0;
 var variable10 = 0;
 var variable11 = true;
 var variable12 = false;
-var variable13 = 100000;
+var variable13 = 500;
 var variable14 = 0;
 var variable15 = false;
 var variable16 = false;
 var variable17 = false;
 var variable18 = false;
+
 
 
 serv.listen(process.env.PORT || 2000);
@@ -59,8 +60,7 @@ io.sockets.on('connection', function(socket){
 		updateUsernames();
 	});
 
-
-
+	
 	//receiving variable data from client
 	socket.on('update variable 1', function(data){
 			variable1 = data.var1;
@@ -136,60 +136,61 @@ io.sockets.on('connection', function(socket){
 	});
 
 	//sending variable data to other clients
-	socket.emit('server to client 1',{
+	io.sockets.emit('server to client 1',{
 		toclient1: variable1
 	});
-	socket.emit('server to client 2',{
+	io.sockets.emit('server to client 2',{
 		toclient2: variable2
 	});
-	socket.emit('server to client 3',{
+	io.sockets.emit('server to client 3',{
 		toclient3: variable3
 	});
-	socket.emit('server to client 4',{
+	io.sockets.emit('server to client 4',{
 		toclient4: variable4
 	});
-	socket.emit('server to client 5',{
+	io.sockets.emit('server to client 5',{
 		toclient5: variable5
 	});
-	socket.emit('server to client 6',{
+	io.sockets.emit('server to client 6',{
 		toclient6: variable6
 	});
-	socket.emit('server to client 7',{
+	io.sockets.emit('server to client 7',{
 		toclient7: variable7
 	});
-	socket.emit('server to client 8',{
+	io.sockets.emit('server to client 8',{
 		toclient8: variable8
 	});
-	socket.emit('server to client 9',{
+	io.sockets.emit('server to client 9',{
 		toclient9: variable9
 	});
-	socket.emit('server to client 10',{
+	io.sockets.emit('server to client 10',{
 		toclient10: variable10
 	});
-	socket.emit('server to client 11',{
+	io.sockets.emit('server to client 11',{
 		toclient11: variable11
 	});
-	socket.emit('server to client 12',{
+	io.sockets.emit('server to client 12',{
 		toclient12: variable12
 	});
-	socket.emit('server to client 13',{
+	io.sockets.emit('server to client 13',{
 		toclient13: variable13
 	});
-	socket.emit('server to client 14',{
+	io.sockets.emit('server to client 14',{
 		toclient14: variable14
 	});
-	socket.emit('server to client 15',{
+	io.sockets.emit('server to client 15',{
 		toclient15: variable15
 	});
-	socket.emit('server to client 16',{
+	io.sockets.emit('server to client 16',{
 		toclient16: variable16
 	});
-	socket.emit('server to client 17',{
+	io.sockets.emit('server to client 17',{
 		toclient17: variable17
 	});
-	socket.emit('server to client 18',{
+	io.sockets.emit('server to client 18',{
 		toclient18: variable18
 	});
+	
 
 	function updateUsernames(){
 		io.sockets.emit('get users', users);
