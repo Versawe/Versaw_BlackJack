@@ -24,7 +24,6 @@ var variable17 = false;
 var variable18 = false;
 
 
-
 serv.listen(process.env.PORT || 2000);
 console.log("Server Started");
 
@@ -50,6 +49,7 @@ io.sockets.on('connection', function(socket){
 	//send message
 	socket.on('send message', function(data){
 		io.sockets.emit('new message', {msg: data, user: socket.username})
+		serverSend();
 	});
 
 	//new user
@@ -58,6 +58,7 @@ io.sockets.on('connection', function(socket){
 		socket.username = data;
 		users.push(socket.username);
 		updateUsernames();
+		serverSend();
 	});
 
 	
@@ -135,7 +136,11 @@ io.sockets.on('connection', function(socket){
 			console.log(variable18);
 	});
 
-	//sending variable data to other clients
+	serverSend();
+
+
+	function serverSend(){
+		//sending variable data to other clients
 	io.sockets.emit('server to client 1',{
 		toclient1: variable1
 	});
@@ -190,6 +195,7 @@ io.sockets.on('connection', function(socket){
 	io.sockets.emit('server to client 18',{
 		toclient18: variable18
 	});
+	}
 	
 
 	function updateUsernames(){
