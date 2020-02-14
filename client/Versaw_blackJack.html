@@ -62,35 +62,34 @@
 				<center>
 				<h2>Black Jack</h2>
 				<br>
-				<input type="button" value = "Recevive from Server" onClick = "receivedFromServer(); updateTextOnClients();"/>
 				<br>
 				<h2>Dealer Clicks to Deal</h2>
-				<input type=button value="DEAL" onClick="dealCard(); finishGame(); variablesToServer();"/>
+				<input type=button value="DEAL" onClick="dealCard(); finishGame(); variablesToServer(); triggerServerSend();"/>
 				<p>Face Up Card Dealt</p>
 				<p id="dealerDelt"></p>
 				<p id="dealerScore"></p>
 				<br>
 				<h2>Add your Bet</h2>
-				<input type=button value ="Add Bet" onClick="addBet100(); variablesToServer();"/>
+				<input type=button value ="Add Bet" onClick="addBet100(); variablesToServer(); triggerServerSend();"/>
 				<br>
-				<input type=button value ="Remove Bet" onClick="removeBet100(); variablesToServer();"/>
+				<input type=button value ="Remove Bet" onClick="removeBet100(); variablesToServer(); triggerServerSend();"/>
 				<p>Your Current bet</p>
 				<p id="playerBet"></p>
 				<p id="playerBank">Your current bank is $500</p>
 				<br>
 				<h2>Click to draw card</h2>
-				<input type=button value="HIT" onClick="drawCard(); finishGame(); variablesToServer();" />
+				<input type=button value="HIT" onClick="drawCard(); finishGame(); variablesToServer(); triggerServerSend();" />
 				<br>
-				<input type=button value="HOLD" onClick="playerHold(); finishGame(); variablesToServer();"/>
+				<input type=button value="HOLD" onClick="playerHold(); finishGame(); variablesToServer(); triggerServerSend();"/>
 				<br>
-				<input type="button" value="DOUBLE DOWN" onClick="doubleDown(); finishGame(); variablesToServer();"/>
+				<input type="button" value="DOUBLE DOWN" onClick="doubleDown(); finishGame(); variablesToServer(); triggerServerSend();"/>
 
 				<p>Card Drawn</p>
 				<p id="playerDrew"></p>
 				<p id="playerScore"></p>
 				<p id = "endGame"></p>
 				<br>
-				<input type=button value="Reset Round" onClick="newRound(); variablesToServer();"/>
+				<input type=button value="Reset Round" onClick="newRound(); variablesToServer(); triggerServerSend();"/>
 
 				</center>
 			</div>
@@ -197,25 +196,25 @@
 				
 				if(!isJack && !isACE && !isQueen && !isKing){
 					document.getElementById("playerDrew").innerHTML = "You drew the " + value + " of " + suit;
-					document.getElementById("playerScore").innerHTML = playersHand;
+					document.getElementById("playerScore").innerHTML = "Player's Current Score: " +playersHand;
 				}
 				if(isACE){
 					document.getElementById("playerDrew").innerHTML = "You drew the Ace of " + suit;
-					document.getElementById("playerScore").innerHTML = playersHand;
+					document.getElementById("playerScore").innerHTML = "Player's Current Score: " +playersHand;
 				}
 				if(isKing){
 					document.getElementById("playerDrew").innerHTML = "You drew the King of " + suit;
-					document.getElementById("playerScore").innerHTML = playersHand;
+					document.getElementById("playerScore").innerHTML = "Player's Current Score: " +playersHand;
 
 				}
 				if(isJack){
 					document.getElementById("playerDrew").innerHTML = "You drew the Jack of " + suit;
-					document.getElementById("playerScore").innerHTML = playersHand;
+					document.getElementById("playerScore").innerHTML = "Player's Current Score: " +playersHand;
 
 				}
 				if(isQueen){
 					document.getElementById("playerDrew").innerHTML = "You drew the Queen of " + suit;
-					document.getElementById("playerScore").innerHTML = playersHand;
+					document.getElementById("playerScore").innerHTML = "Player's Current Score: " +playersHand;
 
 				}
 
@@ -238,26 +237,26 @@
 
 					if(!isJack && !isACE && !isQueen && !isKing){
 						document.getElementById("dealerDelt").innerHTML = "Dealer Played " + value + " of " + suit;
-						document.getElementById("dealerScore").innerHTML = dealersHand;
+						document.getElementById("dealerScore").innerHTML = "Dealer's current Score: "+dealersHand;
 					}
 					if(isACE){
 						printVarDealer = "Dealer Played the Ace of " + suit;
 						document.getElementById("dealerDelt").innerHTML = "Dealer Played the Ace of " + suit;
-						document.getElementById("dealerScore").innerHTML = dealersHand;
+						document.getElementById("dealerScore").innerHTML = "Dealer's current Score: "+dealersHand;
 					}
 					if(isKing){
 						document.getElementById("dealerDelt").innerHTML = "Dealer Played the King of " + suit;
-						document.getElementById("dealerScore").innerHTML = dealersHand;
+						document.getElementById("dealerScore").innerHTML = "Dealer's current Score: "+dealersHand;
 
 					}
 					if(isJack){
 						document.getElementById("dealerDelt").innerHTML = "Dealer Played the Jack of " + suit;
-						document.getElementById("dealerScore").innerHTML = dealersHand;
+						document.getElementById("dealerScore").innerHTML = "Dealer's current Score: "+dealersHand;
 
 					}
 					if(isQueen){
 						document.getElementById("dealerDelt").innerHTML = "Dealer Played the Queen of " + suit;
-						document.getElementById("dealerScore").innerHTML = dealersHand;
+						document.getElementById("dealerScore").innerHTML = "Dealer's current Score: "+dealersHand;
 
 					}
 
@@ -526,6 +525,8 @@
 			document.getElementById("playerBet").innerHTML = "";
 	        document.getElementById("playerBank").innerHTML = "Your current bank is $" + playerCash;
 
+	        triggerServerSend();
+	        updateTextOnClients();
 
 		}
 
@@ -783,13 +784,40 @@
 	    	});
 	    }
 
+	    function triggerServerSend(){
+	    	
+	    	socket.emit('client request',function(data){
+	    		
+
+		    	});
+	    	//updateTextOnClients();
+	    }
+
 	    function updateTextOnClients(){
 			document.getElementById("playerBet").innerHTML = "Player's current bet is " + roundBet;
 	        document.getElementById("playerBank").innerHTML = "Your current bank is $" + playerCash;
-	        document.getElementById("playerScore").innerHTML = playersHand;
-	        document.getElementById("dealerScore").innerHTML = dealersHand;
+	        document.getElementById("playerScore").innerHTML = "Player's Current Score: " +playersHand;
+	        document.getElementById("dealerScore").innerHTML = "Dealer's current Score: "+dealersHand;	
+
+	        if(playersTurn && !dealersTurn && playerHolds){
+				document.getElementById("playerDrew").innerHTML = "Player is holding at " + playersHand;
+			}
+
+			if(playersTurn && secondCardPlayed && !thirdCardPlayed){
+	    		if(roundBet > 0 && playerCash >= roundBet){
+		    		document.getElementById("playerBet").innerHTML = "Player's current bet is " + roundBet;
+		        	document.getElementById("playerBank").innerHTML = "Your current bank is $" + playerCash;
+	    		}
+	    		
+	    	}		
+
 	        finishGame();
 	    }
+
+    socket.on('text update', function(){
+			updateTextOnClients();
+			console.log("updated text for clients");
+		});
 
 
 </script>

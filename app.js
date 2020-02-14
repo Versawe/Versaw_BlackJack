@@ -58,7 +58,12 @@ io.sockets.on('connection', function(socket){
 		socket.username = data;
 		users.push(socket.username);
 		updateUsernames();
+		//serverSend();
+	});
+
+	socket.on('client request',function(){
 		serverSend();
+		console.log("anything?");
 	});
 
 	
@@ -194,6 +199,10 @@ io.sockets.on('connection', function(socket){
 	});
 	io.sockets.emit('server to client 18',{
 		toclient18: variable18
+	});
+
+	io.sockets.emit('text update',{
+
 	});
 	}
 	
