@@ -1,9 +1,11 @@
+// app.js is the Server. This sets up the server using express, http app, and sockets.io
 var express = require('express');
 var app = express();
 var serv = require('http').Server(app);
 users = [];
 connections = [];
 
+//The main variables are made in server then sent to all clients
 var variable1 = '';
 var variable2 = 0;
 var variable3 = false;
@@ -23,16 +25,17 @@ var variable16 = false;
 var variable17 = false;
 var variable18 = false;
 
-
+//listen to port connections
 serv.listen(process.env.PORT || 2000);
 console.log("Server Started");
 
+//searching files for html file
 app.get('/', function(req, res) {
 	res.sendFile(__dirname + '/client/Versaw_blackJack.html');
 });
 app.use('/client',express.static(__dirname + '/client'));
 
-
+//getting sockets.io and an event listener for connections
 var io = require('socket.io')(serv,{});
 io.sockets.on('connection', function(socket){
 	connections.push(socket);
@@ -61,6 +64,7 @@ io.sockets.on('connection', function(socket){
 		//serverSend();
 	});
 
+	//listening for clients asking for variables and then serverSend() immedietely distributes it to all connected sockets/clients
 	socket.on('client request',function(){
 		serverSend();
 		console.log("anything?");
@@ -206,7 +210,7 @@ io.sockets.on('connection', function(socket){
 	});
 	}
 	
-
+	//updates usernames for all clients when someone joins
 	function updateUsernames(){
 		io.sockets.emit('get users', users);
 	}

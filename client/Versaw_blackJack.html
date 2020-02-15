@@ -1,3 +1,4 @@
+<!-- Game code and client code -->
 <html>
 <header>
 	<title>
@@ -10,24 +11,40 @@
 
 <script src = "https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
 
+<!-- using css for visuals of website-->
 <style>
 	body{
 		margin-top: 30px;
+		background-color: green;
 	}
 	#messageArea{
 		display: none;
+	}
+	.fontForGame{
+		font-family: sans-serif;
+		background-color:red;
+		color: white;
+	}
+	.loginTextColors{
+		font-family: sans-serif;
+		color: white;
+	}
+	#workAround{
+		font-family: sans-serif;
+		color: white;
 	}
 
 	
 </style>
 
+<!-- Below is container for username entry and the webchatting service in the Server-->
 <body>
 	<div class ="container">
 		<div id="userFormArea" class="row">
 			<div class="col-md-12">
 				<form id="userForm">
 						<div class="form-group">
-							<label>Enter Username</label>
+							<labe class="loginTextColors">Enter Username</label>
 							<input class="form-control" id="username" />
 							<br/>
 							<input type="submit" class="btn btn-primary" value="Login" />
@@ -39,7 +56,7 @@
 		<div id="messageArea" class="row">
 			<div class="col-md-4">
 				<div class="well">
-					<h3>Online Users</h3>
+					<h3 class="loginTextColors">Online Users</h3>
 					<ul class="list-group" id="users"></ul>
 				</div>
 
@@ -49,7 +66,7 @@
 
 					<form id="messageForm">
 						<div class="form-group">
-							<label>Enter Message</label>
+							<label class="loginTextColors">Enter Message</label>
 							<textarea class="form-control" id="message"></textarea>
 							<br>
 							<input type="submit" class="btn btn-primary" value="Send Message" />
@@ -57,9 +74,10 @@
 						</div>
 					</form>
 			</div>
-
+			<br>
+			<!-- Below is the html for the actual game of Black Jack-->
 			<div>
-				<center>
+				<center class = "fontForGame">
 				<h2>Black Jack</h2>
 				<br>
 				<br>
@@ -88,7 +106,6 @@
 				<p id="playerDrew"></p>
 				<p id="playerScore"></p>
 				<p id = "endGame"></p>
-				<br>
 				<input type=button value="Reset Round" onClick="newRound(); variablesToServer(); triggerServerSend();"/>
 
 				</center>
@@ -101,6 +118,7 @@
 </body>
 
 <script>
+	//variables that recevie what's current in the Server
 	var socket = io.connect();
 	var suit;
 	var value;
@@ -131,6 +149,7 @@
     var thirdCardPlayed;
 
     var playerDD;
+    //Below is jQuery for the chat application within the server
 		$(function(){
 			var $messageForm = $('#messageForm');
 			var $message = $('#message');
@@ -142,17 +161,19 @@
 			var $username = $('#username');
 
 			
-
+			//emit message sent from client to server
 			$messageForm.submit(function(e){
 				e.preventDefault();
 				socket.emit('send message', $message.val());
 				$message.val('');
 			});
 
+			//receives any messages from other clients
 			socket.on('new message', function(data){
-				$chat.append('<div class="well"><strong>'+data.user+'</strong>: ' +data.msg+'</div>');
+				$chat.append('<div class="well" id="workAround"><strong>'+data.user+'</strong>: ' +data.msg+'</div>');
 			});
 
+			//This hides the entry username field and unhides the chat app and game once you enter a username
 			$userForm.submit(function(e){
 				e.preventDefault();
 				socket.emit('new user', $username.val(), function(data){
@@ -174,6 +195,7 @@
 
 		});
 
+		//on start up of client receives varibales from server
 	    receivedFromServer();
 	
 
@@ -226,6 +248,7 @@
 
 		}
 
+		//dealers call function
 		function dealCard(){
 			if(dealersTurn && !playersTurn){
 
@@ -488,6 +511,7 @@
 			return valueFinal;
 		}
 
+		//function that resets varibles for new round
 		function newRound(){
 			suit = '';
 
@@ -530,6 +554,7 @@
 
 		}
 
+		//function that checks if the game has ended each button click
 		function finishGame(){
 			if(dealersHand >= 17 && dealersHand < playersHand){
 				document.getElementById("endGame").innerHTML = "Dealer cannot play anymore. YOU WIN!!!";
@@ -588,6 +613,7 @@
 			
 		}
 	    
+	    //player adds bet
 	    function addBet100(){
 	    	if(playersTurn && !dealersTurn && !firstCardPlayed){
 	    		if(playerCash >= 100){
@@ -602,6 +628,7 @@
 
 	    }
 
+	    //player removes bet
 	    function removeBet100(){
 	    	if(playersTurn && !dealersTurn && !firstCardPlayed){
 	    		if(roundBet >= 100){
@@ -615,6 +642,7 @@
 
 	    }
 
+	    //players choice of doubling down
 	    function doubleDown(){
 	    	if(playersTurn && secondCardPlayed && !thirdCardPlayed){
 	    		if(roundBet > 0 && playerCash >= roundBet){
@@ -632,6 +660,7 @@
 	    	}
 	    }
 
+	    // this function sends changed variables to server each button click
 	    function variablesToServer(){
 
 	    	socket.emit('update variable 1',{
@@ -708,6 +737,7 @@
 		    	});
 	    }
 
+	    //this function receives variables from server
 	    function receivedFromServer(){
 	    	socket.on('server to client 1', function(data){
 	    		suit = data.toclient1;
@@ -784,6 +814,7 @@
 	    	});
 	    }
 
+	    // had to add this extra function to trigger the server to send variables because emitting isn't an event listener on the server side
 	    function triggerServerSend(){
 	    	
 	    	socket.emit('client request',function(data){
@@ -793,6 +824,7 @@
 	    	//updateTextOnClients();
 	    }
 
+	    //updates the text for each client
 	    function updateTextOnClients(){
 			document.getElementById("playerBet").innerHTML = "Player's current bet is " + roundBet;
 	        document.getElementById("playerBank").innerHTML = "Your current bank is $" + playerCash;
