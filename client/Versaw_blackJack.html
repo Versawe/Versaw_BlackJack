@@ -149,6 +149,8 @@
     var thirdCardPlayed;
 
     var playerDD;
+
+    var gameOver;
     //Below is jQuery for the chat application within the server
 		$(function(){
 			var $messageForm = $('#messageForm');
@@ -201,7 +203,7 @@
 
 		//player's darw function
 		function drawCard(){
-			if(!dealersTurn && playersTurn && !playerHolds){
+			if(!dealersTurn && playersTurn && !playerHolds && !gameOver){
 				suit = getSuit();
 
 				value = getValue();
@@ -250,7 +252,7 @@
 
 		//dealers call function
 		function dealCard(){
-			if(dealersTurn && !playersTurn){
+			if(dealersTurn && !playersTurn && !gameOver){
 
 				if(dealersHand < 17){
 
@@ -556,6 +558,13 @@
 
 		//function that checks if the game has ended each button click
 		function finishGame(){
+			if(dealersHand > 21){
+				playersTurn = false;
+				dealersTurn = false;
+				document.getElementById("endGame").innerHTML = "Dealer BUSTED!! You Win!!";
+
+				roundBet = roundBet * 2;
+			}
 			if(dealersHand >= 17 && dealersHand < playersHand){
 				document.getElementById("endGame").innerHTML = "Dealer cannot play anymore. YOU WIN!!!";
 				dealersTurn = false;
@@ -563,7 +572,7 @@
 
 				roundBet = roundBet * 2;
 			}
-			if(dealersHand == playersHand && dealersHand >= 17){
+			if(dealersHand == playersHand && dealersHand >= 17 && playerHand <= 21){
 				document.getElementById("endGame").innerHTML = "TIE GAME! Try again...";
 				dealersTurn = false;
 				playersTurn = false;
@@ -592,14 +601,15 @@
 
 				roundBet = 0;
 			}
-			if(dealersHand > 21){
+
+			if(playerCash <= 0 && roundBet <= 0){
 				playersTurn = false;
 				dealersTurn = false;
-				document.getElementById("endGame").innerHTML = "Dealer BUSTED!! You Win!!";
-
-				roundBet = roundBet * 2;
+				gameOver = true;
+				document.getElementById("endGame").innerHTML = "Player is out of money. Game Over!!!";
 			}
-
+			
+			updateTextOnClients();
 		}
 
 		function playerHold(){
@@ -735,6 +745,10 @@
 		    		var18: playerDD
 
 		    	});
+		    socket.emit('update variable 19',{
+		    		var19: gameOver
+
+		    	});
 	    }
 
 	    //this function receives variables from server
@@ -812,6 +826,10 @@
 	    		playerDD = data.toclient18;
 	    		console.log("Data retrieved from server "+playerDD);
 	    	});
+	    	socket.on('server to client 19', function(data){
+	    		gameOver = data.toclient19;
+	    		console.log("Data retrieved from server "+gameOver);
+	    	});
 	    }
 
 	    // had to add this extra function to trigger the server to send variables because emitting isn't an event listener on the server side
@@ -841,9 +859,12 @@
 		        	document.getElementById("playerBank").innerHTML = "Your current bank is $" + playerCash;
 	    		}
 	    		
+	    	}
+
+	    	if(gameOver){
+	    		document.getElementById("endGame").innerHTML = "Player is out of money. Game Over!!!";
 	    	}		
 
-	        finishGame();
 	    }
 
     socket.on('text update', function(){

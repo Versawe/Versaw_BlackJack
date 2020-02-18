@@ -24,6 +24,7 @@ var variable15 = false;
 var variable16 = false;
 var variable17 = false;
 var variable18 = false;
+var variable19 = false;
 
 //listen to port connections
 serv.listen(process.env.PORT || 2000);
@@ -144,6 +145,10 @@ io.sockets.on('connection', function(socket){
 			variable18 = data.var18;
 			console.log(variable18);
 	});
+	socket.on('update variable 19', function(data){
+			variable19 = data.var19;
+			console.log(variable19);
+	});
 
 	serverSend();
 
@@ -203,6 +208,9 @@ io.sockets.on('connection', function(socket){
 	});
 	io.sockets.emit('server to client 18',{
 		toclient18: variable18
+	});
+	io.sockets.emit('server to client 19',{
+		toclient19: variable19
 	});
 
 	io.sockets.emit('text update',{
