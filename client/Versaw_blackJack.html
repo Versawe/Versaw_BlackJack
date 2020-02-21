@@ -1,170 +1,184 @@
 <!-- Game code and client code -->
 <html lang="en">
+
 <head>
-	<meta charset="UTF-8">
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 </head>
 <header>
-	<title>
-		Eric Versaw's Black Jack Game
-	</title>
-	
-	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <title>
+        Eric Versaw's Black Jack Game
+    </title>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 </header>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
 
-<script src = "https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
 
 <!-- using css for visuals of website-->
 <style>
-	body{
-		margin-top: 30px;
-		background-color: green;
-	}
-	#messageArea{
-		display: none;
-	}
-	.fontForGame{
-		font-family: sans-serif;
-		background-color:red;
-		color: white;
-	}
-	.loginTextColors{
-		font-family: sans-serif;
-		color: white;
-	}
-	#workAround{
-		font-family: sans-serif;
-		color: white;
-	}
+    body {
+        margin-top: 30px;
+        background-color: green;
+    }
 
-	.card{
-    width: 100px;
-    height: 130px;
-    padding: 10px;
-    background-color: red;
-    border-radius: 10px;
-    font-size: 15pt;
-    margin: 3px;
-    border:solid 3px;
-    border-color: black;
-    order: 1;
-    text-align: left;
+    #messageArea {
+        display: none;
+    }
 
-}
+    .fontForGame {
+        font-family: monospace;
+        background-color: red;
+        font-size: 18px;
+        font-weight: bold;
+        /*color: white;*/
+    }
 
+    .fontExtreme {
+        font-size: 35px;
+        font-family: fantasy;
+    }
 
-	
+    .loginTextColors {
+        font-family: monospace;
+        color: white;
+        font-weight: bold;
+    }
+
+    #workAround {
+        font-family: monospace;
+        color: white;
+        font-weight: bold;
+        font-size: 18px;
+    }
+
+    .card {
+        width: 100px;
+        height: 130px;
+        padding: 10px;
+        background-color: red;
+        border-radius: 10px;
+        font-size: 12pt;
+        margin: 3px;
+        border: solid 3px;
+        border-color: black;
+        order: 1;
+        text-align: left;
+
+    }
+
 </style>
 
 <!-- Below is container for username entry and the webchatting service in the Server-->
+
 <body>
-	<div class ="container">
-		<div id="userFormArea" class="row">
-			<div class="col-md-12">
-				<form id="userForm">
-						<div class="form-group">
-							<labe class="loginTextColors">Enter Username</label>
-							<input class="form-control" id="username" />
-							<br/>
-							<input type="submit" class="btn btn-primary" value="Login" />
+    <div class="container">
+        <div id="userFormArea" class="row">
+            <div class="col-md-12">
+                <form id="userForm">
+                    <div class="form-group">
+                        <labe class="loginTextColors">Enter Username</label>
+                            <input class="form-control" id="username" />
+                            <br />
+                            <input type="submit" class="btn btn-primary" value="Login" />
 
-						</div>
-					</form>
-			</div>
-		</div>
-		<div id="messageArea" class="row">
-			<div class="col-md-4">
-				<div class="well">
-					<h3 class="loginTextColors">Online Users</h3>
-					<ul class="list-group" id="users"></ul>
-				</div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div id="messageArea" class="row">
+            <div class="col-md-4">
+                <div class="well">
+                    <h3 class="loginTextColors">Online Users</h3>
+                    <ul class="list-group" id="users"></ul>
+                </div>
 
-			</div>
-			<div class="col-md-8">
-					<div class="chat" id="chat"></div>
+            </div>
+            <div class="col-md-8">
+                <div class="chat" id="chat"></div>
 
-					<form id="messageForm">
-						<div class="form-group">
-							<label class="loginTextColors">Enter Message</label>
-							<textarea class="form-control" id="message"></textarea>
-							<br>
-							<input type="submit" class="btn btn-primary" value="Send Message" />
+                <form id="messageForm">
+                    <div class="form-group">
+                        <label class="loginTextColors">Enter Message</label>
+                        <textarea class="form-control" id="message"></textarea>
+                        <br>
+                        <input type="submit" class="btn btn-primary" value="Send Message" />
 
-						</div>
-					</form>
-			</div>
-			<br>
-			<!-- Below is the html for the actual game of Black Jack-->
-			<div>
-				<center class = "fontForGame">
-				<h2>Black Jack</h2>
-				<br>
-				<div class="container">
-					<p id="annouceTurn"></p>
-					<div class="card">
-						<p id="suitCard">sup</p>
-						<p id="valueCard">bra</p>
-					</div>
-					<p id= "action"></p>
-				</div>
-				<h2>Dealer Clicks to Deal</h2>
-				<input type=button value="DEAL" onClick="dealCard(); finishGame(); variablesToServer(); triggerServerSend();"/>
-				<p>Dealer's score:</p>
-				<p id="dealerScore"></p>
-				<h2>Add your Bet</h2>
-				<input type=button value ="Add Bet" onClick="addBet100(); variablesToServer(); triggerServerSend();"/>
-				<br>
-				<input type=button value ="Remove Bet" onClick="removeBet100(); variablesToServer(); triggerServerSend();"/>
-				<p>Your Current bet</p>
-				<p id="playerBet"></p>
-				<p id="playerBank">Your current bank is $500</p>
-				<h2>Click to draw card</h2>
-				<input type=button value="HIT" onClick="drawCard(); finishGame(); variablesToServer(); triggerServerSend();" />
-				<br>
-				<input type=button value="HOLD" onClick="playerHold(); finishGame(); variablesToServer(); triggerServerSend();"/>
-				<br>
-				<input type="button" value="DOUBLE DOWN" onClick="doubleDown(); finishGame(); variablesToServer(); triggerServerSend();"/>
+                    </div>
+                </form>
+            </div>
+            <br>
+            <!-- Below is the html for the actual game of Black Jack-->
+            <div>
+                <center class="fontForGame">
+                    <h2 class="fontExtreme">Black Jack</h2>
+                    <br>
+                    <p id ="role"></p>
+                    <div class="container">
+                        <p id="annouceTurn" class="fontExtreme"></p>
+                        <div class="card">
+                            <p id="suitCard"></p>
+                            <p id="valueCard"></p>
+                        </div>
+                        <p id="action"></p>
+                        <p id="endGame" class="fontExtreme"></p>
+                    </div>
+                    <h2 class = "fontExtreme">Dealer Clicks to Deal</h2>
+                    <input id = "dealerButtons" type=button value="DEAL" onClick="dealCard(); finishGame(); variablesToServer(); triggerServerSend();" />
+                    <p>Dealer's score:</p>
+                    <p id="dealerScore"></p>
+                    <h2 class = "fontExtreme">Add your Bet</h2>
+                    <input id = "playerButtons" type=button value="Add Bet" onClick="addBet100(); variablesToServer(); triggerServerSend();" />
+                    <br>
+                    <input id = "playerButtons" type=button value="Remove Bet" onClick="removeBet100(); variablesToServer(); triggerServerSend();" />
+                    <p class = "fontExtreme">Player's Current bet</p>
+                    <p id="playerBet"></p>
+                    <p id="playerBank" >Player's current bank is $500</p>
+                    <h2 class = "fontExtreme">Click to draw card</h2>
+                    <input id = "playerButtons" type=button value="HIT" onClick="drawCard(); finishGame(); variablesToServer(); triggerServerSend();" />
+                    <br>
+                    <input id = "playerButtons" type=button value="HOLD" onClick="playerHold(); finishGame(); variablesToServer(); triggerServerSend();" />
+                    <br>
+                    <input id = "playerButtons" type="button" value="DOUBLE DOWN" onClick="doubleDown(); finishGame(); variablesToServer(); triggerServerSend();" />
 
-				<p>Player's Score</p>
-				<p id="playerScore"></p>
-				<p id = "endGame"></p>
-				<input type=button value="Reset Round" onClick="newRound(); variablesToServer(); triggerServerSend();"/>
+                    <p>Player's Score</p>
+                    <p id="playerScore"></p>
+                    <input id = "dealerButtons" type=button value="Reset Round" onClick="newRound(); variablesToServer(); triggerServerSend();" />
+                </center>
+            </div>
 
-				</center>
-			</div>
+        </div>
 
-		</div>
-		
-	</div>
+    </div>
 
 </body>
 
 <script>
-	//variables that recevie what's current in the Server
-	var socket = io.connect();
-	var suit;
-	var value;
+    //variables that recevie what's current in the Server
+    var socket = io.connect();
+    var suit;
+    var value;
 
-	var isJack;
-	var isKing;
-	var isQueen;
-	var isACE;
+    var isJack;
+    var isKing;
+    var isQueen;
+    var isACE;
 
-	var dealersTurn;
-	var playersTurn;
+    var dealersTurn;
+    var playersTurn;
 
-	var dealersHand;
-	var playersHand;
+    var dealersHand;
+    var playersHand;
 
-	var dealerFirstPlay;
+    var dealerFirstPlay;
 
-	var playerHolds;
-    
+    var playerHolds;
+
     var playerCash;
-    
+
     var roundBet;
 
     var firstCardPlayed;
@@ -177,783 +191,775 @@
 
     var gameOver;
 
+    var identity;
+
 
     //Below is jQuery for the chat application within the server
-		$(function(){
-			var $messageForm = $('#messageForm');
-			var $message = $('#message');
-			var $chat = $('#chat');
-			var $messageArea = $('#messageArea');
-			var $userFormArea = $('#userFormArea');
-			var $userForm = $('#userForm');
-			var $users = $('#users');
-			var $username = $('#username');
-
-			var $testImage = $('testImage');
-
-			
-			//emit message sent from client to server
-			$messageForm.submit(function(e){
-				e.preventDefault();
-				socket.emit('send message', $message.val());
-				$message.val('');
-			});
-
-			//receives any messages from other clients
-			socket.on('new message', function(data){
-				$chat.append('<div class="well" id="workAround"><strong>'+data.user+'</strong>: ' +data.msg+'</div>');
-			});
-
-			//This hides the entry username field and unhides the chat app and game once you enter a username
-			$userForm.submit(function(e){
-				e.preventDefault();
-				socket.emit('new user', $username.val(), function(data){
-					if(data){
-						$userFormArea.hide();
-						$messageArea.slideDown(1000);
-					}
-				});
-				$username.val('');
-			});
-
-			socket.on('get users', function(data){
-				var html = '';
-				for(i = 0; i < data.length; i++){
-					html += '<li class="list-group-item">'+data[i]+'</li>';
-				}
-				$users.html(html);
-			});
-
-			function unhideImage(){
-				$testImage.hide();
-			}
-
-		});
-
-		//on start up of client receives varibales from server
-	    receivedFromServer();
-
-
-		//player's darw function
-		function drawCard(){
-			if(!dealersTurn && playersTurn && !playerHolds && !gameOver){
-				suit = getSuit();
-
-				value = getValue();
-
-				createCard();
-
-				//showImage("http://localhost:2000/images/test.jpg");
-	            
-	            if(playersTurn && firstCardPlayed && secondCardPlayed && !thirdCardPlayed){
-					thirdCardPlayed = true;
-				}
-	            if(playersTurn && firstCardPlayed && !secondCardPlayed){
-					secondCardPlayed = true;
-				}
-				if(playersTurn && !firstCardPlayed){
-					firstCardPlayed = true;
-				}
-				
-				/*if(!isJack && !isACE && !isQueen && !isKing){
-					document.getElementById("action").innerHTML = "You drew the " + value + " of " + suit;
-					document.getElementById("playerScore").innerHTML = "Player's Current Score: " +playersHand;
-				}
-				if(isACE){
-					document.getElementById("action").innerHTML = "You drew the Ace of " + suit;
-					document.getElementById("playerScore").innerHTML = "Player's Current Score: " +playersHand;
-				}
-				if(isKing){
-					document.getElementById("action").innerHTML = "You drew the King of " + suit;
-					document.getElementById("playerScore").innerHTML = "Player's Current Score: " +playersHand;
-
-				}
-				if(isJack){
-					document.getElementById("action").innerHTML = "You drew the Jack of " + suit;
-					document.getElementById("playerScore").innerHTML = "Player's Current Score: " +playersHand;
-
-				}
-				if(isQueen){
-					document.getElementById("action").innerHTML = "You drew the Queen of " + suit;
-					document.getElementById("playerScore").innerHTML = "Player's Current Score: " +playersHand;
-
-				}*/
-
-				if(playerDD){
-					document.getElementById("action").innerHTML = "Player is doubling down! The bet is up to " + roundBet + " now!";
-				}
+    $(function() {
+        var $messageForm = $('#messageForm');
+        var $message = $('#message');
+        var $chat = $('#chat');
+        var $messageArea = $('#messageArea');
+        var $userFormArea = $('#userFormArea');
+        var $userForm = $('#userForm');
+        var $users = $('#users');
+        var $username = $('#username');
+
+        var $testImage = $('testImage');
 
-			}
 
-		}
+        //emit message sent from client to server
+        $messageForm.submit(function(e) {
+            e.preventDefault();
+            socket.emit('send message', $message.val());
+            $message.val('');
+        });
 
-		//dealers call function
-		function dealCard(){
-			if(dealersTurn && !playersTurn && !gameOver){
+        //receives any messages from other clients
+        socket.on('new message', function(data) {
+            $chat.append('<div class="well" id="workAround"><strong>' + data.user + '</strong>: ' + data.msg + '</div>');
+        });
 
-				if(dealersHand < 17){
+        //This hides the entry username field and unhides the chat app and game once you enter a username
+        $userForm.submit(function(e) {
+            e.preventDefault();
+            socket.emit('new user', $username.val(), function(data) {
+                if (data) {
+                    $userFormArea.hide();
+                    $messageArea.slideDown(1000);
+                }
+            });
+            $username.val('');
+        });
 
-					suit = getSuit();
+        socket.on('get users', function(data) {
+            var html = '';
+            for (i = 0; i < data.length; i++) {
+                html += '<li class="list-group-item">' + data[i] + '</li>';
+            }
+            $users.html(html);
+        });
 
-					value = getValue();
+        function unhideImage() {
+            $testImage.hide();
+        }
 
-					createCard();
+    });
 
-					/*if(!isJack && !isACE && !isQueen && !isKing){
-						document.getElementById("action").innerHTML = "Dealer Played " + value + " of " + suit;
-						document.getElementById("dealerScore").innerHTML = "Dealer's current Score: "+dealersHand;
-					}
-					if(isACE){
-						printVarDealer = "Dealer Played the Ace of " + suit;
-						document.getElementById("action").innerHTML = "Dealer Played the Ace of " + suit;
-						document.getElementById("dealerScore").innerHTML = "Dealer's current Score: "+dealersHand;
-					}
-					if(isKing){
-						document.getElementById("action").innerHTML = "Dealer Played the King of " + suit;
-						document.getElementById("dealerScore").innerHTML = "Dealer's current Score: "+dealersHand;
+    //on start up of client receives varibales from server
+    receivedFromServer();
 
-					}
-					if(isJack){
-						document.getElementById("action").innerHTML = "Dealer Played the Jack of " + suit;
-						document.getElementById("dealerScore").innerHTML = "Dealer's current Score: "+dealersHand;
+    //player's darw function
+    function drawCard() {
+        if(identity == "Player"){
+            if (!dealersTurn && playersTurn && !playerHolds && !gameOver) {
+            suit = getSuit();
 
-					}
-					if(isQueen){
-						document.getElementById("action").innerHTML = "Dealer Played the Queen of " + suit;
-						document.getElementById("dealerScore").innerHTML = "Dealer's current Score: "+dealersHand;
+            value = getValue();
 
-					}*/
+            createCard();
 
-					if(dealerFirstPlay){
-						dealersTurn = false;
-						playersTurn = true;
-						dealerFirstPlay = false;
+            //showImage("http://localhost:2000/images/test.jpg");
 
-					}
+            if (playersTurn && firstCardPlayed && secondCardPlayed && !thirdCardPlayed) {
+                thirdCardPlayed = true;
+            }
+            if (playersTurn && firstCardPlayed && !secondCardPlayed) {
+                secondCardPlayed = true;
+            }
+            if (playersTurn && !firstCardPlayed) {
+                firstCardPlayed = true;
+            }
 
-				}
+            if (playerDD) {
+                document.getElementById("action").innerHTML = "Player is doubling down! The bet is up to " + roundBet + " now!";
+            }
 
-			}
+        }
 
-		}
+        }
 
-		//function to get random suit
-		function getSuit(){
+    }
 
-			suitChoice = Math.floor(Math.random() * 4) + 1;
+    //dealers call function
+    function dealCard() {
+        if(identity == "Dealer"){
+            if (dealersTurn && !playersTurn && !gameOver) {
 
-			if(suitChoice == 1){
-				suitFinal = 'Diamonds';
+            if (dealersHand < 17) {
 
-			}
-			if(suitChoice == 2){
-				suitFinal = 'Hearts';
+                suit = getSuit();
 
-			}
-			if(suitChoice == 3){
-				suitFinal = 'Clubs';
+                value = getValue();
 
-			}
-			if(suitChoice == 4){
-				suitFinal = 'Spades';
+                createCard();
 
-			}
+                if (dealerFirstPlay) {
+                    dealersTurn = false;
+                    playersTurn = true;
+                    dealerFirstPlay = false;
 
+                }
 
-			return suitFinal;
+            }
 
-		}
+        }
+        }
 
-		//random function to get the value
-		function getValue(){
+    }
 
-			isJack = false;
-			isKing = false;
-			isQueen = false;
-			isACE = false;
+    //function to get random suit
+    function getSuit() {
 
-			valueChoice = Math.floor(Math.random() * 13) + 1;
+        suitChoice = Math.floor(Math.random() * 4) + 1;
 
-			if(valueChoice == 1){
-				valueFinal = 1;
-				isACE = true;
-				if(dealersTurn && !playersTurn){
-					if(dealersHand > 10){
-						dealersHand += 1;
+        if (suitChoice == 1) {
+            suitFinal = 'Diamonds';
 
-					}
-					if(dealersHand <= 10){
-						dealersHand += 11;
+        }
+        if (suitChoice == 2) {
+            suitFinal = 'Hearts';
 
-					}
+        }
+        if (suitChoice == 3) {
+            suitFinal = 'Clubs';
 
-				}
-				if(!dealersTurn && playersTurn){
-					if(playersHand > 10){
-						playersHand += 1;
+        }
+        if (suitChoice == 4) {
+            suitFinal = 'Spades';
 
-					}
-					if(playersHand <= 10){
-						playersHand += 11;
+        }
 
-					}
-				}
-				//ace
-			}
-			if(valueChoice == 2){
-				valueFinal = 2;
-				if(dealersTurn && !playersTurn){
-					dealersHand += 2;
 
-				}
-				if(!dealersTurn && playersTurn){
-					playersHand += 2;
+        return suitFinal;
 
-				}
+    }
 
-			}
-			if(valueChoice == 3){
-				valueFinal = 3;
-				if(dealersTurn && !playersTurn){
-					dealersHand += 3;
+    //random function to get the value
+    function getValue() {
 
-				}
-				if(!dealersTurn && playersTurn){
-					playersHand += 3;
+        isJack = false;
+        isKing = false;
+        isQueen = false;
+        isACE = false;
 
-				}
+        valueChoice = Math.floor(Math.random() * 13) + 1;
 
-			}
-			if(valueChoice == 4){
-				valueFinal = 4;
-				if(dealersTurn && !playersTurn){
-					dealersHand += 4;
+        if (valueChoice == 1) {
+            valueFinal = 1;
+            isACE = true;
+            if (dealersTurn && !playersTurn) {
+                if (dealersHand > 10) {
+                    dealersHand += 1;
 
-				}
-				if(!dealersTurn && playersTurn){
-					playersHand += 4;
+                }
+                if (dealersHand <= 10) {
+                    dealersHand += 11;
 
-				}
+                }
 
-			}
-			if(valueChoice == 5){
-				valueFinal = 5;
-				if(dealersTurn && !playersTurn){
-					dealersHand += 5;
+            }
+            if (!dealersTurn && playersTurn) {
+                if (playersHand > 10) {
+                    playersHand += 1;
 
-				}
-				if(!dealersTurn && playersTurn){
-					playersHand += 5;
+                }
+                if (playersHand <= 10) {
+                    playersHand += 11;
 
-				}
+                }
+            }
+            //ace
+        }
+        if (valueChoice == 2) {
+            valueFinal = 2;
+            if (dealersTurn && !playersTurn) {
+                dealersHand += 2;
 
-			}
-			if(valueChoice == 6){
-				valueFinal = 6;
-				if(dealersTurn && !playersTurn){
-					dealersHand += 6;
+            }
+            if (!dealersTurn && playersTurn) {
+                playersHand += 2;
 
-				}
-				if(!dealersTurn && playersTurn){
-					playersHand += 6;
+            }
 
-				}
+        }
+        if (valueChoice == 3) {
+            valueFinal = 3;
+            if (dealersTurn && !playersTurn) {
+                dealersHand += 3;
 
-			}
-			if(valueChoice == 7){
-				valueFinal = 7;
-				if(dealersTurn && !playersTurn){
-					dealersHand += 7;
+            }
+            if (!dealersTurn && playersTurn) {
+                playersHand += 3;
 
-				}
-				if(!dealersTurn && playersTurn){
-					playersHand += 7;
+            }
 
-				}
+        }
+        if (valueChoice == 4) {
+            valueFinal = 4;
+            if (dealersTurn && !playersTurn) {
+                dealersHand += 4;
 
-			}
-			if(valueChoice == 8){
-				valueFinal = 8;
-				if(dealersTurn && !playersTurn){
-					dealersHand += 8;
+            }
+            if (!dealersTurn && playersTurn) {
+                playersHand += 4;
 
-				}
-				if(!dealersTurn && playersTurn){
-					playersHand += 8;
+            }
 
-				}
+        }
+        if (valueChoice == 5) {
+            valueFinal = 5;
+            if (dealersTurn && !playersTurn) {
+                dealersHand += 5;
 
-			}
-			if(valueChoice == 9){
-				valueFinal = 9;
-				if(dealersTurn && !playersTurn){
-					dealersHand += 9;
+            }
+            if (!dealersTurn && playersTurn) {
+                playersHand += 5;
 
-				}
-				if(!dealersTurn && playersTurn){
-					playersHand += 9;
+            }
 
-				}
+        }
+        if (valueChoice == 6) {
+            valueFinal = 6;
+            if (dealersTurn && !playersTurn) {
+                dealersHand += 6;
 
-			}
-			if(valueChoice == 10){
-				valueFinal = 10;
-				if(dealersTurn && !playersTurn){
-					dealersHand += 10;
+            }
+            if (!dealersTurn && playersTurn) {
+                playersHand += 6;
 
-				}
-				if(!dealersTurn && playersTurn){
-					playersHand += 10;
+            }
 
-				}
+        }
+        if (valueChoice == 7) {
+            valueFinal = 7;
+            if (dealersTurn && !playersTurn) {
+                dealersHand += 7;
 
-			}
-			if(valueChoice == 11){
-				valueFinal = 10;
-				isJack = true;
-				if(dealersTurn && !playersTurn){
-					dealersHand += 10;
+            }
+            if (!dealersTurn && playersTurn) {
+                playersHand += 7;
 
-				}
-				if(!dealersTurn && playersTurn){
-					playersHand += 10;
+            }
 
-				}
-				//jack
-			}
-			if(valueChoice == 12){
-				valueFinal = 10;
-				isQueen = true;
-				if(dealersTurn && !playersTurn){
-					dealersHand += 10;
+        }
+        if (valueChoice == 8) {
+            valueFinal = 8;
+            if (dealersTurn && !playersTurn) {
+                dealersHand += 8;
 
-				}
-				if(!dealersTurn && playersTurn){
-					playersHand += 10;
+            }
+            if (!dealersTurn && playersTurn) {
+                playersHand += 8;
 
-				}
-				//queen
-			}
-			if(valueChoice == 13){
-				valueFinal = 10;
-				isKing = true;
-				if(dealersTurn && !playersTurn){
-					dealersHand += 10;
+            }
 
-				}
-				if(!dealersTurn && playersTurn){
-					playersHand += 10;
+        }
+        if (valueChoice == 9) {
+            valueFinal = 9;
+            if (dealersTurn && !playersTurn) {
+                dealersHand += 9;
 
-				}
-				//king
-			}
+            }
+            if (!dealersTurn && playersTurn) {
+                playersHand += 9;
 
+            }
 
-			return valueFinal;
-		}
+        }
+        if (valueChoice == 10) {
+            valueFinal = 10;
+            if (dealersTurn && !playersTurn) {
+                dealersHand += 10;
 
-		//function that resets varibles for new round
-		function newRound(){
-			suit = '';
+            }
+            if (!dealersTurn && playersTurn) {
+                playersHand += 10;
 
-			value = 0;
-
-			isJack = false;
-			isKing = false;
-			isQueen = false;
-			isACE = false;
-
-			dealersTurn = true;
-			playersTurn = false;
-
-			dealersHand = 0;
-			playersHand = 0;
-
-			dealerFirstPlay = true;
-			playerHolds = false;
-
-			playerCash = roundBet + playerCash;
-
-			roundBet = 0;
-
-			firstCardPlayed = false;
-			secondCardPlayed = false;
-			thirdCardPlayed = false;
-
-			playerDD = false;
-
-			document.getElementById("playerScore").innerHTML = "";
-			document.getElementById("dealerScore").innerHTML = "";
-			document.getElementById("action").innerHTML = "";
-			document.getElementById("action").innerHTML = "";
-			document.getElementById("endGame").innerHTML = "";
-			document.getElementById("playerBet").innerHTML = "";
-	        document.getElementById("playerBank").innerHTML = "Your current bank is $" + playerCash;
-
-	        triggerServerSend();
-	        updateTextOnClients();
-	        createCard();
-
-		}
-
-		//function that checks if the game has ended each button click
-		function finishGame(){
-			if(dealersHand > 21){
-				playersTurn = false;
-				dealersTurn = false;
-				document.getElementById("endGame").innerHTML = "Dealer BUSTED!! You Win!!";
-
-				roundBet = roundBet * 2;
-			}
-			if(dealersHand >= 17 && dealersHand < playersHand){
-				document.getElementById("endGame").innerHTML = "Dealer cannot play anymore. YOU WIN!!!";
-				dealersTurn = false;
-				playersTurn = false;
-
-				roundBet = roundBet * 2;
-			}
-			if(dealersHand == playersHand && dealersHand >= 17 && playerHand <= 21){
-				document.getElementById("endGame").innerHTML = "TIE GAME! Try again...";
-				dealersTurn = false;
-				playersTurn = false;
-
-			}
-			if(dealersHand > playersHand && playerHolds && dealersHand <= 21){
-				document.getElementById("endGame").innerHTML = "Dealer beats your score. DEALER WINS!!!";
-				dealersTurn = false;
-				playersTurn = false;
-
-				roundBet = 0;
-
-			}
-			if(dealersHand > playersHand && playerDD && dealersHand <= 21){
-				document.getElementById("endGame").innerHTML = "Dealer beats your score. DEALER WINS!!!";
-				dealersTurn = false;
-				playersTurn = false;
-
-				roundBet = 0;
-
-			}
-			if(playersHand > 21){
-				playersTurn = false;
-				dealersTurn = false;
-				document.getElementById("endGame").innerHTML = "You BUSTED!!";
-
-				roundBet = 0;
-			}
-
-			if(playerCash <= 0 && roundBet <= 0){
-				playersTurn = false;
-				dealersTurn = false;
-				gameOver = true;
-				document.getElementById("endGame").innerHTML = "Player is out of money. Game Over!!!";
-			}
-			
-		}
-
-		function playerHold(){
-			if(playersTurn && !dealersTurn){
-				document.getElementById("action").innerHTML = "Player is holding at " + playersHand;
-				playersTurn = false;
-				dealersTurn = true;
-				playerHolds = true;
-
-			}
-			
-		}
-	    
-	    //player adds bet
-	    function addBet100(){
-	    	if(playersTurn && !dealersTurn && !firstCardPlayed){
-	    		if(playerCash >= 100){
-		            playerCash -= 100;
-		            roundBet += 100;
-
-		            document.getElementById("playerBet").innerHTML = "Player's current bet is " + roundBet;
-	        		document.getElementById("playerBank").innerHTML = "Your current bank is $" + playerCash;
-		        }
-
-	    	}
-
-	    }
-
-	    //player removes bet
-	    function removeBet100(){
-	    	if(playersTurn && !dealersTurn && !firstCardPlayed){
-	    		if(roundBet >= 100){
-		            roundBet -= 100;
-		            playerCash += 100;
-
-		            document.getElementById("playerBet").innerHTML = "Player's current bet is " + roundBet;
-	        		document.getElementById("playerBank").innerHTML = "Your current bank is $" + playerCash;
-		        }
-	    	}
-
-	    }
-
-	    //players choice of doubling down
-	    function doubleDown(){
-	    	if(playersTurn && secondCardPlayed && !thirdCardPlayed){
-	    		if(roundBet > 0 && playerCash >= roundBet){
-	    			playerDD = true;
-	    			playerCash = playerCash - roundBet;
-		    		roundBet = roundBet * 2;
-		    		document.getElementById("playerBet").innerHTML = "Player's current bet is " + roundBet;
-		        	document.getElementById("playerBank").innerHTML = "Your current bank is $" + playerCash;
-		    		drawCard();
-		    		playersTurn = false;
-		    		dealersTurn = true;
-
-	    		}
-	    		
-	    	}
-	    }
-
-	    // this function sends changed variables to server each button click
-	    function variablesToServer(){
-
-	    	socket.emit('update variable 1',{
-	    		var1: suit
-
-		    	});
-		    socket.emit('update variable 2',{
-		    		var2: value
-
-		    	});
-		    socket.emit('update variable 3',{
-		    		var3: isJack
-
-		    	});
-		    socket.emit('update variable 4',{
-		    		var4: isQueen
-
-		    	});
-		    socket.emit('update variable 5',{
-		    		var5: isKing
-
-		    	});
-		    socket.emit('update variable 6',{
-		    		var6: isACE
-
-		    	});
-		    socket.emit('update variable 7',{
-		    		var7: dealersTurn
-
-		    	});
-		    socket.emit('update variable 8',{
-		    		var8: playersTurn
-
-		    	});
-		    socket.emit('update variable 9',{
-		    		var9: dealersHand
-
-		    	});
-		    socket.emit('update variable 10',{
-		    		var10: playersHand
-
-		    	});
-		    socket.emit('update variable 11',{
-		    		var11: dealerFirstPlay
-
-		    	});
-		    socket.emit('update variable 12',{
-		    		var12: playerHolds
-
-		    	});
-		    socket.emit('update variable 13',{
-		    		var13: playerCash
-
-		    	});
-		    socket.emit('update variable 14',{
-		    		var14: roundBet
-
-		    	});
-		    socket.emit('update variable 15',{
-		    		var15: firstCardPlayed
-
-		    	});
-		    socket.emit('update variable 16',{
-		    		var16: secondCardPlayed
-
-		    	});
-		    socket.emit('update variable 17',{
-		    		var17: thirdCardPlayed
-
-		    	});
-		    socket.emit('update variable 18',{
-		    		var18: playerDD
-
-		    	});
-		    socket.emit('update variable 19',{
-		    		var19: gameOver
-
-		    	});
-	    }
-
-	    //this function receives variables from server
-	    function receivedFromServer(){
-	    	socket.on('server to client 1', function(data){
-	    		suit = data.toclient1;
-	    		console.log("Data retrieved from server "+suit);
-	 
-	    	});
-	    	socket.on('server to client 2', function(data){
-	    		value = data.toclient2;
-	    		console.log("Data retrieved from server "+value);
-	    	});
-	    	socket.on('server to client 3', function(data){
-	    		isJack = data.toclient3;
-	    		console.log("Data retrieved from server "+isJack);
-	    	});
-	    	socket.on('server to client 4', function(data){
-	    		isKing = data.toclient4;
-	    		console.log("Data retrieved from server "+isKing);
-	    	});
-	    	socket.on('server to client 5', function(data){
-	    		isQueen = data.toclient5;
-	    		console.log("Data retrieved from server "+isQueen);
-	    	});
-	    	socket.on('server to client 6', function(data){
-	    		isACE = data.toclient6;
-	    		console.log("Data retrieved from server "+isACE);
-	    	});
-	    	socket.on('server to client 7', function(data){
-	    		dealersTurn = data.toclient7;
-	    		console.log("Data retrieved from server "+dealersTurn);
-	    	});
-	    	socket.on('server to client 8', function(data){
-	    		playersTurn = data.toclient8;
-	    		console.log("Data retrieved from server "+playersTurn);
-	    	});
-	    	socket.on('server to client 9', function(data){
-	    		dealersHand = data.toclient9;
-	    		console.log("Data retrieved from server "+dealersHand);
-	    	});
-	    	socket.on('server to client 10', function(data){
-	    		playersHand = data.toclient10;
-	    		console.log("Data retrieved from server "+playersHand);
-	    	});
-	    	socket.on('server to client 11', function(data){
-	    		dealerFirstPlay = data.toclient11;
-	    		console.log("Data retrieved from server "+dealerFirstPlay);
-	    	});
-	    	socket.on('server to client 12', function(data){
-	    		playerHolds = data.toclient12;
-	    		console.log("Data retrieved from server "+playerHolds);
-	    	});
-	    	socket.on('server to client 13', function(data){
-	    		playerCash = data.toclient13;
-	    		console.log("Data retrieved from server "+playerCash);
-	    	});
-	    	socket.on('server to client 14', function(data){
-	    		roundBet = data.toclient14;
-	    		console.log("Data retrieved from server "+roundBet);
-	    	});
-	    	socket.on('server to client 15', function(data){
-	    		firstCardPlayed = data.toclient15;
-	    		console.log("Data retrieved from server "+firstCardPlayed);
-	    	});
-	    	socket.on('server to client 16', function(data){
-	    		secondCardPlayed = data.toclient16;
-	    		console.log("Data retrieved from server "+secondCardPlayed);
-	    	});
-	    	socket.on('server to client 17', function(data){
-	    		thirdCardPlayed = data.toclient17;
-	    		console.log("Data retrieved from server "+thirdCardPlayed);
-	    	});
-	    	socket.on('server to client 18', function(data){
-	    		playerDD = data.toclient18;
-	    		console.log("Data retrieved from server "+playerDD);
-	    	});
-	    	socket.on('server to client 19', function(data){
-	    		gameOver = data.toclient19;
-	    		console.log("Data retrieved from server "+gameOver);
-	    	});
-	    }
-
-	    // had to add this extra function to trigger the server to send variables because emitting isn't an event listener on the server side
-	    function triggerServerSend(){
-	    	
-	    	socket.emit('client request',function(data){
-	    		
-
-		    	});
-	    	//updateTextOnClients();
-	    }
-
-	    //updates the text for each client
-	    function updateTextOnClients(){
-			document.getElementById("playerBet").innerHTML = "Player's current bet is " + roundBet;
-	        document.getElementById("playerBank").innerHTML = "Your current bank is $" + playerCash;
-	        document.getElementById("playerScore").innerHTML = playersHand;
-	        document.getElementById("dealerScore").innerHTML = dealersHand;	
-
-	        if(playersTurn && !dealersTurn && playerHolds){
-				document.getElementById("action").innerHTML = "Player is holding at " + playersHand;
-			}
-
-			if(playersTurn && secondCardPlayed && !thirdCardPlayed){
-	    		if(roundBet > 0 && playerCash >= roundBet){
-		    		document.getElementById("playerBet").innerHTML = "Player's current bet is " + roundBet;
-		        	document.getElementById("playerBank").innerHTML = "Your current bank is $" + playerCash;
-	    		}
-	    		
-	    	}
-
-	    	if(gameOver){
-	    		document.getElementById("endGame").innerHTML = "Player is out of money. Game Over!!!";
-	    	}
-
-	    	finishGame();		
-
-	    }
-
-	    function createCard(){
-	    	if(playersTurn){
-	    		document.getElementById("annouceTurn").innerHTML = "It is the Player's turn!"
-	    	}
-	    	if(dealersTurn){
-	    		document.getElementById("annouceTurn").innerHTML = "It is the Dealer's turn!"
-	    	}
-	    	
-	    	
-	    	document.getElementById("suitCard").innerHTML = suit;
-	    	if(!isKing && !isACE && !isQueen && !isJack && value != 0){
-	    		document.getElementById("valueCard").innerHTML = value;
-	    	}else if(isKing){
-	    		document.getElementById("valueCard").innerHTML = "K";
-
-	    	}else if(isQueen){
-	    		document.getElementById("valueCard").innerHTML = "Q";
-
-	    	}else if(isJack){
-	    		document.getElementById("valueCard").innerHTML = "J";
-
-	    	}else if(isACE){
-	    		document.getElementById("valueCard").innerHTML = "A";
-
-	    	}else{
-	    		document.getElementById("valueCard").innerHTML = "";
-
-	    	}
-			
-			if(playerHolds){
-				document.getElementById("action").innerHTML = "Player is holding at " + playersHand;
-			}else if(playerDD){
-				document.getElementById("action").innerHTML = "Player is doubling down! The bet is up to " + roundBet + " now!";
-			}else{
-				document.getElementById("action").innerHTML = "";
-			}
-	    }
-
-    socket.on('text update', function(){
-    		createCard();
-			updateTextOnClients();
-			console.log("updated text for clients");
-		});
-
-    
+            }
 
+        }
+        if (valueChoice == 11) {
+            valueFinal = 10;
+            isJack = true;
+            if (dealersTurn && !playersTurn) {
+                dealersHand += 10;
+
+            }
+            if (!dealersTurn && playersTurn) {
+                playersHand += 10;
+
+            }
+            //jack
+        }
+        if (valueChoice == 12) {
+            valueFinal = 10;
+            isQueen = true;
+            if (dealersTurn && !playersTurn) {
+                dealersHand += 10;
+
+            }
+            if (!dealersTurn && playersTurn) {
+                playersHand += 10;
+
+            }
+            //queen
+        }
+        if (valueChoice == 13) {
+            valueFinal = 10;
+            isKing = true;
+            if (dealersTurn && !playersTurn) {
+                dealersHand += 10;
+
+            }
+            if (!dealersTurn && playersTurn) {
+                playersHand += 10;
+
+            }
+            //king
+        }
+
+
+        return valueFinal;
+    }
+
+    //function that resets varibles for new round
+    function newRound() {
+        if(identity == "Dealer"){
+            suit = '';
+
+            value = 0;
+
+            isJack = false;
+            isKing = false;
+            isQueen = false;
+            isACE = false;
+
+            dealersTurn = true;
+            playersTurn = false;
+
+            dealersHand = 0;
+            playersHand = 0;
+
+            dealerFirstPlay = true;
+            playerHolds = false;
+
+            playerCash = roundBet + playerCash;
+
+            roundBet = 0;
+
+            firstCardPlayed = false;
+            secondCardPlayed = false;
+            thirdCardPlayed = false;
+
+            playerDD = false;
+
+            document.getElementById("playerScore").innerHTML = "";
+            document.getElementById("dealerScore").innerHTML = "";
+            document.getElementById("action").innerHTML = "";
+            document.getElementById("action").innerHTML = "";
+            document.getElementById("endGame").innerHTML = "";
+            document.getElementById("playerBet").innerHTML = "";
+            document.getElementById("playerBank").innerHTML = "Player's current bank is $" + playerCash;
+
+            triggerServerSend();
+            updateTextOnClients();
+            createCard();
+        }
+
+    }
+
+    //function that checks if the game has ended each button click
+    function finishGame() {
+        if (dealersHand > 21) {
+            playersTurn = false;
+            dealersTurn = false;
+            document.getElementById("endGame").innerHTML = "Dealer BUSTED!! Player Wins!!";
+
+            roundBet = roundBet * 2;
+        } else if (dealersHand >= 17 && dealersHand < playersHand) {
+            document.getElementById("endGame").innerHTML = "Dealer cannot play anymore. PLAYER WINS!!!";
+            dealersTurn = false;
+            playersTurn = false;
+
+            roundBet = roundBet * 2;
+        } else if (dealersHand == playersHand && dealersHand >= 17 && playersHand <= 21) {
+            document.getElementById("endGame").innerHTML = "Tie game! Try again...";
+            dealersTurn = false;
+            playersTurn = false;
+
+        } else if (dealersHand > playersHand && playerHolds && dealersHand <= 21) {
+            document.getElementById("endGame").innerHTML = "Dealer beats player's score. DEALER WINS!!!";
+            dealersTurn = false;
+            playersTurn = false;
+
+            roundBet = 0;
+
+        } else if (dealersHand > playersHand && playerDD && dealersHand <= 21) {
+            document.getElementById("endGame").innerHTML = "Dealer beats player's score. DEALER WINS!!!";
+            dealersTurn = false;
+            playersTurn = false;
+
+            roundBet = 0;
+
+        } else if (playersHand > 21) {
+            playersTurn = false;
+            dealersTurn = false;
+            document.getElementById("endGame").innerHTML = "PLAYER BUSTED!!";
+
+            roundBet = 0;
+        } else if (playerCash <= 0 && roundBet <= 0) {
+            playersTurn = false;
+            dealersTurn = false;
+            gameOver = true;
+            document.getElementById("endGame").innerHTML = "Player is out of money. Game Over!!!";
+        } else {
+            document.getElementById("endGame").innerHTML = "";
+        }
+
+    }
+
+    function playerHold() {
+        if(identity == "Player"){
+            if (playersTurn && !dealersTurn) {
+            document.getElementById("action").innerHTML = "Player is holding at " + playersHand;
+            playersTurn = false;
+            dealersTurn = true;
+            playerHolds = true;
+
+        }
+        }
+        
+    }
+
+    //player adds bet
+    function addBet100() {
+        if(identity == "Player"){
+            if (playersTurn && !dealersTurn && !firstCardPlayed) {
+                if (playerCash >= 100) {
+                    playerCash -= 100;
+                    roundBet += 100;
+
+                    document.getElementById("playerBet").innerHTML = "Player's current bet is " + roundBet;
+                    document.getElementById("playerBank").innerHTML = "Player's current bank is $" + playerCash;
+                }
+
+            }
+        }
+
+    }
+
+    //player removes bet
+    function removeBet100() {
+        if(identity == "Player"){
+            if (playersTurn && !dealersTurn && !firstCardPlayed) {
+                if (roundBet >= 100) {
+                    roundBet -= 100;
+                    playerCash += 100;
+
+                    document.getElementById("playerBet").innerHTML = "Player's current bet is " + roundBet;
+                    document.getElementById("playerBank").innerHTML = "Player's current bank is $" + playerCash;
+                }
+            }
+        }
+
+    }
+
+    //players choice of doubling down
+    function doubleDown() {
+        if(identity == "Player"){
+            if (playersTurn && secondCardPlayed && !thirdCardPlayed) {
+                if (roundBet > 0 && playerCash >= roundBet) {
+                    playerDD = true;
+                    playerCash = playerCash - roundBet;
+                    roundBet = roundBet * 2;
+                    document.getElementById("playerBet").innerHTML = "Player's current bet is " + roundBet;
+                    document.getElementById("playerBank").innerHTML = "Player's current bank is $" + playerCash;
+                    drawCard();
+                    playersTurn = false;
+                    dealersTurn = true;
+
+                }
+
+            }
+        }
+        
+    }
+
+    // this function sends changed variables to server each button click
+    function variablesToServer() {
+
+        socket.emit('update variable 1', {
+            var1: suit
+
+        });
+        socket.emit('update variable 2', {
+            var2: value
+
+        });
+        socket.emit('update variable 3', {
+            var3: isJack
+
+        });
+        socket.emit('update variable 4', {
+            var4: isQueen
+
+        });
+        socket.emit('update variable 5', {
+            var5: isKing
+
+        });
+        socket.emit('update variable 6', {
+            var6: isACE
+
+        });
+        socket.emit('update variable 7', {
+            var7: dealersTurn
+
+        });
+        socket.emit('update variable 8', {
+            var8: playersTurn
+
+        });
+        socket.emit('update variable 9', {
+            var9: dealersHand
+
+        });
+        socket.emit('update variable 10', {
+            var10: playersHand
+
+        });
+        socket.emit('update variable 11', {
+            var11: dealerFirstPlay
+
+        });
+        socket.emit('update variable 12', {
+            var12: playerHolds
+
+        });
+        socket.emit('update variable 13', {
+            var13: playerCash
+
+        });
+        socket.emit('update variable 14', {
+            var14: roundBet
+
+        });
+        socket.emit('update variable 15', {
+            var15: firstCardPlayed
+
+        });
+        socket.emit('update variable 16', {
+            var16: secondCardPlayed
+
+        });
+        socket.emit('update variable 17', {
+            var17: thirdCardPlayed
+
+        });
+        socket.emit('update variable 18', {
+            var18: playerDD
+
+        });
+        socket.emit('update variable 19', {
+            var19: gameOver
+
+        });
+    }
+
+    //this function receives variables from server
+    function receivedFromServer() {
+        socket.on('server to client 1', function(data) {
+            suit = data.toclient1;
+            console.log("Data retrieved from server " + suit);
+
+        });
+        socket.on('server to client 2', function(data) {
+            value = data.toclient2;
+            console.log("Data retrieved from server " + value);
+        });
+        socket.on('server to client 3', function(data) {
+            isJack = data.toclient3;
+            console.log("Data retrieved from server " + isJack);
+        });
+        socket.on('server to client 4', function(data) {
+            isKing = data.toclient4;
+            console.log("Data retrieved from server " + isKing);
+        });
+        socket.on('server to client 5', function(data) {
+            isQueen = data.toclient5;
+            console.log("Data retrieved from server " + isQueen);
+        });
+        socket.on('server to client 6', function(data) {
+            isACE = data.toclient6;
+            console.log("Data retrieved from server " + isACE);
+        });
+        socket.on('server to client 7', function(data) {
+            dealersTurn = data.toclient7;
+            console.log("Data retrieved from server " + dealersTurn);
+        });
+        socket.on('server to client 8', function(data) {
+            playersTurn = data.toclient8;
+            console.log("Data retrieved from server " + playersTurn);
+        });
+        socket.on('server to client 9', function(data) {
+            dealersHand = data.toclient9;
+            console.log("Data retrieved from server " + dealersHand);
+        });
+        socket.on('server to client 10', function(data) {
+            playersHand = data.toclient10;
+            console.log("Data retrieved from server " + playersHand);
+        });
+        socket.on('server to client 11', function(data) {
+            dealerFirstPlay = data.toclient11;
+            console.log("Data retrieved from server " + dealerFirstPlay);
+        });
+        socket.on('server to client 12', function(data) {
+            playerHolds = data.toclient12;
+            console.log("Data retrieved from server " + playerHolds);
+        });
+        socket.on('server to client 13', function(data) {
+            playerCash = data.toclient13;
+            console.log("Data retrieved from server " + playerCash);
+        });
+        socket.on('server to client 14', function(data) {
+            roundBet = data.toclient14;
+            console.log("Data retrieved from server " + roundBet);
+        });
+        socket.on('server to client 15', function(data) {
+            firstCardPlayed = data.toclient15;
+            console.log("Data retrieved from server " + firstCardPlayed);
+        });
+        socket.on('server to client 16', function(data) {
+            secondCardPlayed = data.toclient16;
+            console.log("Data retrieved from server " + secondCardPlayed);
+        });
+        socket.on('server to client 17', function(data) {
+            thirdCardPlayed = data.toclient17;
+            console.log("Data retrieved from server " + thirdCardPlayed);
+        });
+        socket.on('server to client 18', function(data) {
+            playerDD = data.toclient18;
+            console.log("Data retrieved from server " + playerDD);
+        });
+        socket.on('server to client 19', function(data) {
+            gameOver = data.toclient19;
+            console.log("Data retrieved from server " + gameOver);
+        });
+        socket.on('server to client 20',function(data){
+            identity = data.toclient20;
+            console.log("This client is the " + identity);
+        });
+    }
+
+    // had to add this extra function to trigger the server to send variables because emitting isn't an event listener on the server side
+    function triggerServerSend() {
+
+        socket.emit('client request', function(data) {
+
+
+        });
+        //updateTextOnClients();
+    }
+
+    //updates the text for each client
+    function updateTextOnClients() {
+        document.getElementById("playerBet").innerHTML = "Player's current bet is " + roundBet;
+        document.getElementById("playerBank").innerHTML = "Player's current bank is $" + playerCash;
+        document.getElementById("playerScore").innerHTML = playersHand;
+        document.getElementById("dealerScore").innerHTML = dealersHand;
+        //tells client what they are
+        if(identity == "Dealer"){
+            document.getElementById("role").innerHTML = "You are the " + identity;
+        }else if(identity == "Player"){
+            document.getElementById("role").innerHTML = "You are the " + identity;
+        }else{
+            document.getElementById("role").innerHTML = "You are a " + identity;
+        }
+
+        if (playersTurn && !dealersTurn && playerHolds) {
+            document.getElementById("action").innerHTML = "Player is holding at " + playersHand;
+        }
+
+        if (playersTurn && secondCardPlayed && !thirdCardPlayed) {
+            if (roundBet > 0 && playerCash >= roundBet) {
+                document.getElementById("playerBet").innerHTML = "Player's current bet is " + roundBet;
+                document.getElementById("playerBank").innerHTML = "Player's current bank is $" + playerCash;
+            }
+
+        }
+
+        if (dealersHand > 21) {
+            document.getElementById("endGame").innerHTML = "Dealer BUSTED!! Player Wins!!";
+        } else if (dealersHand >= 17 && dealersHand < playersHand) {
+            document.getElementById("endGame").innerHTML = "Dealer cannot play anymore. PLAYER WINS!!!";
+        } else if (dealersHand == playersHand && dealersHand >= 17 && playersHand <= 21) {
+            document.getElementById("endGame").innerHTML = "Tie game! Try again...";
+
+        } else if (dealersHand > playersHand && playerHolds && dealersHand <= 21) {
+            document.getElementById("endGame").innerHTML = "Dealer beats player's score. DEALER WINS!!!";
+
+        } else if (dealersHand > playersHand && playerDD && dealersHand <= 21) {
+            document.getElementById("endGame").innerHTML = "Dealer beats player's score. DEALER WINS!!!";
+
+        } else if (playersHand > 21) {
+            document.getElementById("endGame").innerHTML = "PLAYER BUSTED!!";
+        } else if (playerCash <= 0 && roundBet <= 0) {
+            document.getElementById("endGame").innerHTML = "Player is out of money. Game Over!!!";
+        } else {
+            document.getElementById("endGame").innerHTML = "";
+        }
+
+        if (gameOver) {
+            document.getElementById("endGame").innerHTML = "Player is out of money. Game Over!!!";
+        }
+
+
+    }
+
+    function createCard() {
+        if (playersTurn) {
+            document.getElementById("annouceTurn").innerHTML = "It is the Player's turn!"
+        }
+        if (dealersTurn) {
+            document.getElementById("annouceTurn").innerHTML = "It is the Dealer's turn!"
+        }
+
+
+        document.getElementById("suitCard").innerHTML = suit;
+        if (!isKing && !isACE && !isQueen && !isJack && value != 0) {
+            document.getElementById("valueCard").innerHTML = value;
+        } else if (isKing) {
+            document.getElementById("valueCard").innerHTML = "K";
+
+        } else if (isQueen) {
+            document.getElementById("valueCard").innerHTML = "Q";
+
+        } else if (isJack) {
+            document.getElementById("valueCard").innerHTML = "J";
+
+        } else if (isACE) {
+            document.getElementById("valueCard").innerHTML = "A";
+
+        } else {
+            document.getElementById("valueCard").innerHTML = "";
+
+        }
+
+        if (playerHolds) {
+            document.getElementById("action").innerHTML = "Player is holding at " + playersHand;
+        } else if (playerDD) {
+            document.getElementById("action").innerHTML = "Player is doubling down! The bet is up to " + roundBet + " now!";
+        } else {
+            document.getElementById("action").innerHTML = "";
+        }
+    }
+
+    socket.on('text update', function() {
+        createCard();
+        updateTextOnClients();
+        console.log("updated text for clients");
+    });
 
 </script>
 

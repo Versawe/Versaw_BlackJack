@@ -26,6 +26,10 @@ var variable17 = false;
 var variable18 = false;
 var variable19 = false;
 
+var hasPlayer = false;
+var hasPlayer2 = false;
+var identitySer = "";
+
 //listen to port connections
 serv.listen(process.env.PORT || 2000);
 console.log("Server Started");
@@ -41,7 +45,17 @@ var io = require('socket.io')(serv,{});
 io.sockets.on('connection', function(socket){
 	connections.push(socket);
 	console.log('Connected %s sockets connected', connections.length);
-
+	if(hasPlayer && hasPlayer2){
+		identitySer = "Spectator";
+	}
+	if(hasPlayer && !hasPlayer2){
+		hasPlayer2 = true;
+		identitySer = "Player";
+	}
+	if(!hasPlayer){
+		hasPlayer = true;
+		identitySer = "Dealer";
+	}
 	//disconnect
 	socket.on('disconnect', function(data){
 		users.splice(users.indexOf(socket.username), 1);
@@ -151,7 +165,9 @@ io.sockets.on('connection', function(socket){
 	});
 
 	serverSend();
-
+	socket.emit('server to client 20',{
+		toclient20: identitySer
+	});
 
 	function serverSend(){
 		//sending variable data to other clients
