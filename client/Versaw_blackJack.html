@@ -22,7 +22,7 @@
 <style>
     body {
         margin-top: 30px;
-        background-color: green;
+        background-color: grey;
     }
 
     #messageArea {
@@ -31,8 +31,8 @@
 
     .fontForGame {
         font-family: monospace;
-        background-color: red;
-        font-size: 18px;
+        background-color: green;
+        font-size: 20px;
         font-weight: bold;
         /*color: white;*/
     }
@@ -44,24 +44,25 @@
 
     .loginTextColors {
         font-family: monospace;
-        color: white;
+        color: black;
         font-weight: bold;
+        font-size: 20px;
     }
 
     #workAround {
         font-family: monospace;
-        color: white;
+        color: black;
         font-weight: bold;
-        font-size: 18px;
+        font-size: 20px;
     }
 
     .card {
         width: 100px;
         height: 130px;
         padding: 10px;
-        background-color: red;
+        background-color: white;
         border-radius: 10px;
-        font-size: 12pt;
+        font-size: 15px;
         margin: 3px;
         border: solid 3px;
         border-color: black;
@@ -115,7 +116,6 @@
             <div>
                 <center class="fontForGame">
                     <h2 class="fontExtreme">Black Jack</h2>
-                    <br>
                     <p id ="role"></p>
                     <div class="container">
                         <p id="annouceTurn" class="fontExtreme"></p>
@@ -128,8 +128,12 @@
                     </div>
                     <h2 class = "fontExtreme">Dealer Clicks to Deal</h2>
                     <input id = "dealerButtons" type=button value="DEAL" onClick="dealCard(); finishGame(); variablesToServer(); triggerServerSend();" />
+                    <br>
+                    <br>
+                    <input id = "dealerButtons" type=button value="Reset Round" onClick="newRound(); variablesToServer(); triggerServerSend();" />
                     <p>Dealer's score:</p>
                     <p id="dealerScore"></p>
+                    <p>-------------------------------------------------------------------</p>
                     <h2 class = "fontExtreme">Add your Bet</h2>
                     <input id = "playerButtons" type=button value="Add Bet" onClick="addBet100(); variablesToServer(); triggerServerSend();" />
                     <br>
@@ -146,7 +150,6 @@
 
                     <p>Player's Score</p>
                     <p id="playerScore"></p>
-                    <input id = "dealerButtons" type=button value="Reset Round" onClick="newRound(); variablesToServer(); triggerServerSend();" />
                 </center>
             </div>
 
