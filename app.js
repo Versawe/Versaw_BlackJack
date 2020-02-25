@@ -45,6 +45,8 @@ var io = require('socket.io')(serv,{});
 io.sockets.on('connection', function(socket){
 	connections.push(socket);
 	console.log('Connected %s sockets connected', connections.length);
+
+	// Where the server gives ID's to clients
 	if(hasPlayer && hasPlayer2){
 		identitySer = "Spectator";
 	}
